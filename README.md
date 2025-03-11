@@ -1,3 +1,3 @@
 # NLA-project_materials
 Yusuf's chapter one research proposal on preexisting datasets. 
-The raw NLA_datsets (2007-2022) were download directly from the EPA website: https://www.epa.gov/national-aquatic-resource-surveys/data-national-aquatic-resource-surveys
+The raw NLA_datsets (2007-2022) were downloaded directly from the EPA website: https://www.epa.gov/national-aquatic-resource-surveys/data-national-aquatic-resource-surveys
