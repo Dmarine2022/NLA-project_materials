@@ -6,3 +6,5 @@ For more information on abbreviations used, see metadata txt files from the EPA 
 Few Abbrev. to note:
 MICX=Microcystin
 CYLSPER=Cylindrospermopsin
+
+We using only "X" site sample data not "L" (liitoral) e.g. MICX Versus MICL
