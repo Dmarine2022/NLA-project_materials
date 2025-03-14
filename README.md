@@ -8,3 +8,7 @@ MICX=Microcystin
 CYLSPER=Cylindrospermopsin
 
 We using only "X" site sample data not "L" (liitoral) e.g. MICX Versus MICL
+
+
+NTL = Total Nitrogen
+PTL = Total Phosporus
