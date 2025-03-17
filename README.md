@@ -12,3 +12,8 @@ We using only "X" site sample data not "L" (liitoral) e.g. MICX Versus MICL
 
 NTL = Total Nitrogen
 PTL = Total Phosporus
+
+
+
+TO DEAL WITH BDL (non detect-ND),we use half detection limit
+NLA Toxin MDL MICX = 0.1 ug/L; CYLSPER = 0.05 ug/L
