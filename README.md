@@ -15,5 +15,5 @@ PTL = Total Phosporus
 
 
 
-TO DEAL WITH BDL (non detect-ND),we use half detection limit
+To deal with BDL (non detect-ND),we use half detection limit
 NLA Toxin MDL MICX = 0.1 ug/L; CYLSPER = 0.05 ug/L
