@@ -3,6 +3,7 @@
 library(tidyverse)
 library(readr)
 library(dplyr)
+library(ggpubr) #for correlation tests
 
 #FOR CLEAN NAMES (USE LATER)
 library(janitor)
@@ -26,6 +27,9 @@ landscape2022 <- read_csv('https://raw.githubusercontent.com/Dmarine2022/NLA-pro
 profile2022 <- read_csv('https://raw.githubusercontent.com/Dmarine2022/NLA-project_materials/refs/heads/main/NLA2022_dataset/nla2022_profile_wide.csv?token=GHSAT0AAAAAAC65NYVZLJPLSWOAGAXSRUY6Z6ZNA6A')
 
 
+##NLA22_siteinfo data
+siteinfo2022 <- read_csv('https://raw.githubusercontent.com/Dmarine2022/NLA-project_materials/refs/heads/main/NLA2022_dataset/nla22_siteinfo.csv?token=GHSAT0AAAAAAC65NYVY4L5TLAFL6DXY2XIUZ62XU2A')
+
 
 
 #Check more detail on Warning message
@@ -41,7 +45,7 @@ names(toxin2022)
 names(secchi2022)
 names(landscap2022)
 names(profile2022)
-
+names(siteinfo2022)
 
 
 #pIVOT WHERE NECESSARY##################
@@ -166,11 +170,15 @@ mean_profiles_below5m <- profile2022 %>%
   )
 
 
+# select siteinfo
+#2022
 
-
+siteinfo2022_subset <- siteinfo2022 %>% 
+  select(UNIQUE_ID, SITE_ID, AREA_HA, ELEVATION,LAKE_ORGN, LAT_DD83, LON_DD83, INDEX_SITE_DEPTH) #note: we have elevation in landscape data too
 
 
 #View the first few rows
+#2022
 head(WaterChem2022_subset)
 head(toxin2022_subset)
 head(secchi2022_sebset)
@@ -182,8 +190,8 @@ head(mean_profiles_1to2m)
 head(mean_profiles_2to4m)
 head(mean_profiles_below4m)
 head(mean_profiles_below5m)
-
-
+##siteinfo2022
+head(siteinfo2022_subset)
 
 
 
@@ -192,6 +200,16 @@ colSums(is.na(WaterChem2022_subset))
 colSums(is.na(toxin2022_subset))
 colSums(is.na(secchi2022_sebset))
 colSums(is.na(landscape2022_sebset))
+#profiles
+colSums(is.na(mean_profiles_alldepths))
+colSums(is.na(mean_profiles_top1m))
+colSums(is.na(mean_profiles_1to2m))
+colSums(is.na(mean_profiles_2to4m))
+colSums(is.na(mean_profiles_below4m))
+colSums(is.na(mean_profiles_below5m))
+#siteinfo
+colSums(is.na(siteinfo2022_subset)) #note NAs in LAKE_ORGN and INDEX_SITE_DEPTH 
+
 
 
 ###TO DEAL WITH BDL (non detect-ND),we use half detection limit#######
@@ -207,6 +225,7 @@ colSums(is.na(toxin2022_DL)) #cHECK NA count again
 
 ###JOIN SEBSET DATA#####
 ##To combine the datasets####
+#2022
 combined_data <- left_join(WaterChem2022_subset, toxin2022_DL, 
                           by = c("UNIQUE_ID", "SITE_ID", "DATE_COL", "VISIT_NO"))
 #join secchi
@@ -218,3 +237,30 @@ combined_data3 <- left_join(combined_data2, landscape2022_sebset,
 #Join mean_profiles_top1m
 combined_data4 <- left_join(combined_data3, mean_profiles_top1m,       #Note: Consider joining the "mean_profiles_alldepths" later
                             by = c("UNIQUE_ID", "SITE_ID", "DATE_COL", "VISIT_NO"))
+
+#join site information
+combined_data5 <- left_join(combined_data4, siteinfo2022_subset,
+                            by = c("UNIQUE_ID", "SITE_ID"))
+
+combined_data5b <- left_join(combined_data4, siteinfo2022_subset, 
+          by = c("UNIQUE_ID", "SITE_ID"),
+          relationship = "many-to-many") #note
+
+View(combined_data5b)
+#############################
+#############################
+####cHECK QUICK RELATIONSHIP PLOTS
+#Load library
+library(ggpubr)
+
+combined_data5b %>%
+  ggplot(aes(x = CHLA_RESULT, y = MICX)) + #Change variables as many times as possible
+  geom_point() +
+  geom_smooth(method = "loess", se = TRUE, color = "red") +
+  scale_x_log10() +
+  scale_y_log10() +
+  stat_cor(method = "spearman", label.x = 0.5, label.y = 2, aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")))+ #Note: R VALUES IN THE PLOT REPRESENT RHO VALUE.
+  theme_bw()
+
+#confirm values with
+cor.test(combined_data5b$CHLA_RESULT, combined_data5b$MICX, method = "spearman")
