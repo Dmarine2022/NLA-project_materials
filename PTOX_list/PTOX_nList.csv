@@ -1,99 +1,99 @@
-﻿PTOX_Species,Cyanotoxins,Reference,,,
-Anabaenopsis arnoldii,MIC,Chapman & Foss (2020),,,
-Anabaenopsis milleri,MIC,Chapman & Foss (2020),,,
-Anabaena spp. (Dolichospermum spp.),ANA,Chapman & Foss (2020); Chorus & Welker (2021).,,,
-Anabaena lapponica,CYL,Chapman & Foss (2020),,,
-Anabaena subcylindrica,MIC,Chapman & Foss (2020),,,
-Aphanizomenon sp,ANA,Chorus & Welker (2021),,,
-Aphanizomenon favaloroi,SAX,Chorus & Welker (2021),,,
-Aphanizomenon flos-aquae ,ANA_CYL_SAX,Chapman & Foss (2020); Chorus & Welker (2021).,,,
-Aphanizomenon gracile,CYL_SAX,Chapman & Foss (2020); Chorus & Welker (2021).,,,
-Aphanocapsa cumulus,MIC,Chapman & Foss (2020),,,
-Arthrospira fusiformis (Arthrospira sp),ANA_MIC,Chapman & Foss (2020); Chorus & Welker (2021).,,,
-Blennothrix lyngbyacea (previously Hydrocoleum lyngbyaceum),ANA,Chapman & Foss (2020),,,
-Chrysosporum bergii (previously Anabaena),CYL_MIC,Chapman & Foss (2020),,,
-Chrysosporum ovalisporum (previously Aphanizomenon),CYL,Chapman & Foss (2020),,,
-Cuspidothrix issatschenkoi (previously Aphanizomenon),ANA_SAX,Chapman & Foss (2020); Chorus & Welker (2021).,,,
-Raphidiopsis raciborskii (previously called Cylindrospermopsis raciborskii),ANA_CYL_SAX,Chapman & Foss (2020); Chorus & Welker (2021).,,,
-Cylindrospermum sp.,ANA,Chapman & Foss (2020); Chorus & Welker (2021).,,,
-Cylindrospermum stagnale,SAX,Chapman & Foss (2020),,,
-Desmonostoc muscorum (previously Nostoc muscorum),MIC,Chapman & Foss (2020),,,
-Dolichospermum circinale (previously Anabaena circinalis),ANA_MIC_SAX,Chapman & Foss (2020); Chorus & Welker (2021).,,,
-Dolichospermum crassum (previously Anabaena crassa),ANA,Chapman & Foss (2020),,,
-Dolichospermum flos-aquae (previously Anabaena flos-aquae),ANA_MIC,Chapman & Foss (2020); Chorus & Welker (2021).,,,
-Dolichospermum lemmermannii (previously Anabaena lemmermannii),ANA_MIC_CYN_SAX,Chapman & Foss (2020); Chorus & Welker (2021).,,,
-Dolichospermum macrosporum (previously Anabaena macrospora),ANA,Chapman & Foss (2020),,,
-Dolichospermum planctonicum (previously Anabaena planctonica),ANA,Chapman & Foss (2020),,,
-Dolichospermum mendotae (previously Anabaena mendotae),ANA_CYL,Chapman & Foss (2020); Chorus & Welker (2021).,,,
-Dolichospermum spiroides (previously Anabaena spiroides),ANA_SAX,Chapman & Foss (2020); Chorus & Welker (2021).,,,
-Dolichospermum sp. (Anabaena sp.),MIC,Chapman & Foss (2020),,,
-Fischerella sp.,MIC,Chapman & Foss (2020),,,
-Geitlerinema splendidum (previously Phormidium splendidum),MIC_ANA,Chapman & Foss (2020),,,
-Gloeotrichia echinulata,MIC,Chapman & Foss (2020),,,
-Gloeotrichia natans,MIC,Chapman & Foss (2020),,,
-Hapalosiphon hibernicus,MIC,Chapman & Foss (2020),,,
-Heteroscytonema crispum (previously Scytonema crispum),SAX,Chapman & Foss (2020),,,
-Kamptonema formosum (previously Phormidium formosum),ANA,Chapman & Foss (2020),,,
-Leptolyngbya sp.,MIC,Chapman & Foss (2020),,,
-Leptolyngbya boryana (previously Plectonema boryanum),MIC,Chapman & Foss (2020),,,
-Limnothrix redekei,MIC,Chapman & Foss (2020),,,
-Limnothrix sp.,MIC,Chapman & Foss (2020),,,
-Merismopedia sp.,MIC,Chapman & Foss (2020),,,
-Merismopedia cf. tenuissima,MIC,Chapman & Foss (2020),,,
-Microcoleus autumnalis (previously Phormidium autumnale),ANA_MIC,Chapman & Foss (2020); Chorus & Welker (2021).,,,
-Microcystis aeruginosa,MIC,Chapman & Foss (2020),,,
-Microcystis botrys,MIC,Chapman & Foss (2020),,,
-Microcystis ichthyoblabe,MIC,Chapman & Foss (2020),,,
-Microcystis panniformis,MIC,Chapman & Foss (2020),,,
-Microcystis smithii,MIC,Chapman & Foss (2020),,,
-Microcystis viridis,MIC,Chapman & Foss (2020),,,
-Microcystis wesenbergii,MIC,Chapman & Foss (2020),,,
-Microcystis sp.,MIC,Chapman & Foss (2020),,,
-Microseira (Lyngbya) wollei,CYL_SAX,Chapman & Foss (2020); Chorus & Welker (2021).,,,
-Nostoc spp.,MIC,Chapman & Foss (2020),,,
-Nostoc cf. commune,MIC,Chapman & Foss (2020),,,
-Nostoc linckia,MIC_SAX,Chapman & Foss (2020),,,
-Nostoc paludosum,MIC,Chapman & Foss (2020),,,
-Nostoc carneum (previously Nostoc spongiaeforme),MIC,Chapman & Foss (2020); Chorus & Welker (2021).,,,
-Oscillatoria limosa,MIC,Chapman & Foss (2020),,,
-Oscillatoria margaritifera,MIC,Chapman & Foss (2020),,,
-Oscillatoria spp.,ANA_CYL,Chapman & Foss (2020); Chorus & Welker (2021).,,,
-Oscillatoria tenuis,MIC,Chapman & Foss (2020),,,
-Phormidium spp.,MIC,Chapman & Foss (2020),,,
-Phormidium corium,MIC,Chapman & Foss (2020),,,
-Phormidium favosum,MIC_ANA,Chapman & Foss (2020); Chorus & Welker (2021).,,,
-Phormidium willei,MIC,Chapman & Foss (2020),,,
-Phormidium uncinatum,MIC_ANA,Chapman & Foss (2020),,,
-Planktothrix agardhii,ANA_MIC,Chapman & Foss (2020),,,
-Planktothrix isothrix,MIC,Chapman & Foss (2020),,,
-Planktothrix rubescens,ANA_MIC,Chapman & Foss (2020),,,
-Planktothrix sp.,SAX,Chapman & Foss (2020); Chorus & Welker (2021).,,,
-Pseudanabaena galeata,MIC,Chapman & Foss (2020),,,
-Pseudanabaena mucicola,MIC,Chapman & Foss (2020),,,
-Pseudanabaena limnetica,MIC,Chapman & Foss (2020),,,
-Pseudocapsa dubia,MIC,Chapman & Foss (2020),,,
-Radiocystis fernandoi,MIC,Chapman & Foss (2020),,,
-Raphidiopsis curvata,CYL,Chapman & Foss (2020),,,
-Raphidiopsis brookii,SAX,Chapman & Foss (2020),,,
-Raphidiopsis mediterranea,ANA_CYL,Chapman & Foss (2020); Chorus & Welker (2021).,,,
-Raphidiopsis raciborskii (previously Cylindrospermopsis raciborskii),ANA_CYL_SAX,Chapman & Foss (2020),,,
-Rivularia biasolettiana,MIC,Chapman & Foss (2020),,,
-Rivularia haematites,MIC,Chapman & Foss (2020),,,
-Romeria caruaru,MIC,Chapman & Foss (2020),,,
-Schizothrix calcicola,Aplysiatoxins,Chapman & Foss (2020),,,
-Scytonema drilosiphon,MIC,Chapman & Foss (2020),,,
-Snowella lacustris,MIC,Chapman & Foss (2020),,,
-Sphaerospermopsis aphanizomenoides (previously Anabaena and Aphanizomenon),ANA_CYL_SAX_MIC,Chapman & Foss (2020),,,
-Sphaerospermopsis torques-reginae (previously Anabaena),ANA,Chapman & Foss (2020); Chorus & Welker (2021).,,,
-Stenomitos frigidus (previously Pseudanabaena frigida),MIC,Chapman & Foss (2020),,,
-Synechococcus sp.,MIC,Chapman & Foss (2020),,,
-Synechocystis sp.,MIC,Chapman & Foss (2020),,,
-Synechocystis aquatilis,MIC,Chapman & Foss (2020),,,
-Tolypothrix conglutinata,Scytophycin,Chapman & Foss (2020),,,
-Tolypothrix distorta,MIC,Chapman & Foss (2020),,,
-Trichodesmium erythraeum,MIC,Chapman & Foss (2020),,,
-Trichodesmium thiebautii,Trichotoxin 2,Chapman & Foss (2020),,,
-Trichormus variabilis (previously Anabaena),MIC,Chapman & Foss (2020),,,
-Tychonema bourrellyi,ANA,Chapman & Foss (2020),,,
-Umezakia natans,CYL,Chapman & Foss (2020),,,
-Woronichinia naegeliana,MIC,Chapman & Foss (2020),,,
+﻿PTOX_Species,Cyanotoxins,Genus-group,MIC-Vs-CYL,Reference
+Anabaenopsis arnoldii,MIC,Anabaenopsis,MIC,Chapman & Foss (2020)
+Anabaenopsis milleri,MIC,Anabaenopsis,MIC,Chapman & Foss (2020)
+Anabaena spp. (Dolichospermum spp.),ANA,,,Chapman & Foss (2020); Chorus & Welker (2021).
+Anabaena lapponica,CYL,Anabaena,CYL,Chapman & Foss (2020)
+Anabaena subcylindrica,MIC,Anabaena,MIC,Chapman & Foss (2020)
+Aphanizomenon sp,ANA,,,Chorus & Welker (2021)
+Aphanizomenon favaloroi,SAX,,,Chorus & Welker (2021)
+Aphanizomenon flos-aquae ,ANA_CYL_SAX,Aphanizomenon,CYL,Chapman & Foss (2020); Chorus & Welker (2021).
+Aphanizomenon gracile,CYL_SAX,Aphanizomenon,CYL,Chapman & Foss (2020); Chorus & Welker (2021).
+Aphanocapsa cumulus,MIC,Aphanocapsa,MIC,Chapman & Foss (2020)
+Arthrospira fusiformis (Arthrospira sp),ANA_MIC,Arthrospira,MIC,Chapman & Foss (2020); Chorus & Welker (2021).
+Blennothrix lyngbyacea (previously Hydrocoleum lyngbyaceum),ANA,,,Chapman & Foss (2020)
+Chrysosporum bergii (previously Anabaena),CYL_MIC,Chrysosporum ,CYL_MIC,Chapman & Foss (2020)
+Chrysosporum ovalisporum (previously Aphanizomenon),CYL,Cuspidothrix,CYL,Chapman & Foss (2020)
+Cuspidothrix issatschenkoi (previously Aphanizomenon),ANA_SAX,,,Chapman & Foss (2020); Chorus & Welker (2021).
+Raphidiopsis raciborskii (previously called Cylindrospermopsis raciborskii),ANA_CYL_SAX,Raphidiopsis/ Cylindrospermopsis,CYL,Chapman & Foss (2020); Chorus & Welker (2021).
+Cylindrospermum sp.,ANA,,,Chapman & Foss (2020); Chorus & Welker (2021).
+Cylindrospermum stagnale,SAX,,,Chapman & Foss (2020)
+Desmonostoc muscorum (previously Nostoc muscorum),MIC,Desmonostoc,MIC,Chapman & Foss (2020)
+Dolichospermum circinale (previously Anabaena circinalis),ANA_MIC_SAX,Dolichospermum,MIC,Chapman & Foss (2020); Chorus & Welker (2021).
+Dolichospermum crassum (previously Anabaena crassa),ANA,,,Chapman & Foss (2020)
+Dolichospermum flos-aquae (previously Anabaena flos-aquae),ANA_MIC,Dolichospermum,,Chapman & Foss (2020); Chorus & Welker (2021).
+Dolichospermum lemmermannii (previously Anabaena lemmermannii),ANA_MIC_CYN_SAX,Dolichospermum,CYL_MIC,Chapman & Foss (2020); Chorus & Welker (2021).
+Dolichospermum macrosporum (previously Anabaena macrospora),ANA,,,Chapman & Foss (2020)
+Dolichospermum planctonicum (previously Anabaena planctonica),ANA,,,Chapman & Foss (2020)
+Dolichospermum mendotae (previously Anabaena mendotae),ANA_CYL,Dolichospermum,CYL,Chapman & Foss (2020); Chorus & Welker (2021).
+Dolichospermum spiroides (previously Anabaena spiroides),ANA_SAX,,,Chapman & Foss (2020); Chorus & Welker (2021).
+Dolichospermum sp. (Anabaena sp.),MIC,Dolichospermum,MIC,Chapman & Foss (2020)
+Fischerella sp.,MIC,Fischerella,MIC,Chapman & Foss (2020)
+Geitlerinema splendidum (previously Phormidium splendidum),MIC_ANA,Geitlerinema,MIC,Chapman & Foss (2020)
+Gloeotrichia echinulata,MIC,Gloeotrichia,MIC,Chapman & Foss (2020)
+Gloeotrichia natans,MIC,Gloeotrichia,MIC,Chapman & Foss (2020)
+Hapalosiphon hibernicus,MIC,Hapalosiphon,MIC,Chapman & Foss (2020)
+Heteroscytonema crispum (previously Scytonema crispum),SAX,,,Chapman & Foss (2020)
+Kamptonema formosum (previously Phormidium formosum),ANA,,,Chapman & Foss (2020)
+Leptolyngbya sp.,MIC,Leptolyngbya,MIC,Chapman & Foss (2020)
+Leptolyngbya boryana (previously Plectonema boryanum),MIC,Leptolyngbya/ Plectonema,MIC,Chapman & Foss (2020)
+Limnothrix redekei,MIC,Limnothrix,MIC,Chapman & Foss (2020)
+Limnothrix sp.,MIC,Limnothrix,MIC,Chapman & Foss (2020)
+Merismopedia sp.,MIC,Merismopedia,MIC,Chapman & Foss (2020)
+Merismopedia cf. tenuissima,MIC,Merismopedia,MIC,Chapman & Foss (2020)
+Microcoleus autumnalis (previously Phormidium autumnale),ANA_MIC,Microcoleus/ Phormidium,MIC,Chapman & Foss (2020); Chorus & Welker (2021).
+Microcystis aeruginosa,MIC,Microcystis,MIC,Chapman & Foss (2020)
+Microcystis botrys,MIC,Microcystis,MIC,Chapman & Foss (2020)
+Microcystis ichthyoblabe,MIC,Microcystis,MIC,Chapman & Foss (2020)
+Microcystis panniformis,MIC,Microcystis,MIC,Chapman & Foss (2020)
+Microcystis smithii,MIC,Microcystis,MIC,Chapman & Foss (2020)
+Microcystis viridis,MIC,Microcystis,MIC,Chapman & Foss (2020)
+Microcystis wesenbergii,MIC,Microcystis,MIC,Chapman & Foss (2020)
+Microcystis sp.,MIC,Microcystis,MIC,Chapman & Foss (2020)
+Microseira (Lyngbya) wollei,CYL_SAX,Microseira/ Lyngbya,CYL,Chapman & Foss (2020); Chorus & Welker (2021).
+Nostoc spp.,MIC,Nostoc ,MIC,Chapman & Foss (2020)
+Nostoc cf. commune,MIC,Nostoc ,MIC,Chapman & Foss (2020)
+Nostoc linckia,MIC_SAX,Nostoc ,MIC,Chapman & Foss (2020)
+Nostoc paludosum,MIC,Nostoc ,MIC,Chapman & Foss (2020)
+Nostoc carneum (previously Nostoc spongiaeforme),MIC,Nostoc ,MIC,Chapman & Foss (2020); Chorus & Welker (2021).
+Oscillatoria limosa,MIC,Oscillatoria,MIC,Chapman & Foss (2020)
+Oscillatoria margaritifera,MIC,Oscillatoria,MIC,Chapman & Foss (2020)
+Oscillatoria spp.,ANA_CYL,Oscillatoria,CYL,Chapman & Foss (2020); Chorus & Welker (2021).
+Oscillatoria tenuis,MIC,Oscillatoria,MIC,Chapman & Foss (2020)
+Phormidium spp.,MIC,Phormidium ,MIC,Chapman & Foss (2020)
+Phormidium corium,MIC,Phormidium ,MIC,Chapman & Foss (2020)
+Phormidium favosum,MIC_ANA,Phormidium ,MIC,Chapman & Foss (2020); Chorus & Welker (2021).
+Phormidium willei,MIC,Phormidium ,MIC,Chapman & Foss (2020)
+Phormidium uncinatum,MIC_ANA,Phormidium ,MIC,Chapman & Foss (2020)
+Planktothrix agardhii,ANA_MIC,Planktothrix ,MIC,Chapman & Foss (2020)
+Planktothrix isothrix,MIC,Planktothrix ,MIC,Chapman & Foss (2020)
+Planktothrix rubescens,ANA_MIC,Planktothrix ,MIC,Chapman & Foss (2020)
+Planktothrix sp.,SAX,,,Chapman & Foss (2020); Chorus & Welker (2021).
+Pseudanabaena galeata,MIC,Pseudanabaena,MIC,Chapman & Foss (2020)
+Pseudanabaena mucicola,MIC,Pseudanabaena,MIC,Chapman & Foss (2020)
+Pseudanabaena limnetica,MIC,Pseudanabaena,MIC,Chapman & Foss (2020)
+Pseudocapsa dubia,MIC,Pseudanabaena,MIC,Chapman & Foss (2020)
+Radiocystis fernandoi,MIC,Radiocystis,MIC,Chapman & Foss (2020)
+Raphidiopsis curvata,CYL,Raphidiopsis,CYL,Chapman & Foss (2020)
+Raphidiopsis brookii,SAX,,,Chapman & Foss (2020)
+Raphidiopsis mediterranea,ANA_CYL,Raphidiopsis,CYL,Chapman & Foss (2020); Chorus & Welker (2021).
+Raphidiopsis raciborskii (previously Cylindrospermopsis raciborskii),ANA_CYL_SAX,Raphidiopsis,CYL,Chapman & Foss (2020)
+Rivularia biasolettiana,MIC,Rivularia,MIC,Chapman & Foss (2020)
+Rivularia haematites,MIC,Rivularia,MIC,Chapman & Foss (2020)
+Romeria caruaru,MIC,Romeria,MIC,Chapman & Foss (2020)
+Schizothrix calcicola,Aplysiatoxins,,,Chapman & Foss (2020)
+Scytonema drilosiphon,MIC,Scytonema,MIC,Chapman & Foss (2020)
+Snowella lacustris,MIC,Snowella,MIC,Chapman & Foss (2020)
+Sphaerospermopsis aphanizomenoides (previously Anabaena and Aphanizomenon),ANA_CYL_SAX_MIC,Sphaerospermopsis,CYL_MIC,Chapman & Foss (2020)
+Sphaerospermopsis torques-reginae (previously Anabaena),ANA,,,Chapman & Foss (2020); Chorus & Welker (2021).
+Stenomitos frigidus (previously Pseudanabaena frigida),MIC,Stenomitos,MIC,Chapman & Foss (2020)
+Synechococcus sp.,MIC,Synechococcus,MIC,Chapman & Foss (2020)
+Synechocystis sp.,MIC,Synechocystis,MIC,Chapman & Foss (2020)
+Synechocystis aquatilis,MIC,Synechocystis,MIC,Chapman & Foss (2020)
+Tolypothrix conglutinata,Scytophycin,,,Chapman & Foss (2020)
+Tolypothrix distorta,MIC,Tolypothrix,MIC,Chapman & Foss (2020)
+Trichodesmium erythraeum,MIC,Trichodesmium,MIC,Chapman & Foss (2020)
+Trichodesmium thiebautii,Trichotoxin 2,,,Chapman & Foss (2020)
+Trichormus variabilis (previously Anabaena),MIC,Trichormus,MIC,Chapman & Foss (2020)
+Tychonema bourrellyi,ANA,,,Chapman & Foss (2020)
+Umezakia natans,CYL,Umezakia ,CYL,Chapman & Foss (2020)
+Woronichinia naegeliana,MIC,Woronichinia,MIC,Chapman & Foss (2020)
