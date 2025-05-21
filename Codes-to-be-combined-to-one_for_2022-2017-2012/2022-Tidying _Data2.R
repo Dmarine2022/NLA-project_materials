@@ -724,3 +724,1040 @@ p4D <- combined_data6 %>%
 
 # Arrange plots together
 ggarrange(p1A, p2B, p3C, p4D, ncol = 2, nrow = 2)
+
+#####################################################
+##################################################################################CORRELATION MATRIX
+# Install required packages if not already installed
+#install.packages(c("GGally", "ggcorrplot"))
+
+library(dplyr)
+library(corrplot)
+library(GGally)
+library(ggcorrplot)
+
+
+#cHECK NAMES
+names(combined_data7A)
+# Select specific numeric variables (adjust based on your dataset)
+selected_data <- combined_data7A %>%
+  select(MICX, CYLSPER, CHLA_RESULT, total_phytoplankton_biovolume, total_cyanobacteria_biovolume, PTOX_biovolume, percent_cyanobacteria_biovolume,
+         percent_PTOX_biovolume, Shannon_Index, Simpson_Index, Evenness)
+
+selected_data2 <- combined_data7A %>%
+  select(Temp_top1m, Secchi, pH_top1m, PH_RESULT, ELEVATION, INDEX_SITE_DEPTH, #conductivity top1 also removed
+         AMMONIA_N_RESULT, ANC_RESULT, CALCIUM_RESULT, CHLORIDE_RESULT, COLOR_RESULT, COND_RESULT, DOC_RESULT, MAGNESIUM_RESULT, NTL_RESULT, PTL_RESULT,
+         NTL_DISS_RESULT, PTL_DISS_RESULT, SODIUM_RESULT, TURB_RESULT, SULFATE_RESULT, POTASSIUM_RESULT) #All the nitrate nitrite are removed because of NA problem check to see which can be used later
+
+selected_data_combine <- combined_data7A %>%
+  select(MICX, CYLSPER, CHLA_RESULT, total_phytoplankton_biovolume, total_cyanobacteria_biovolume, PTOX_biovolume, percent_cyanobacteria_biovolume,
+         percent_PTOX_biovolume, Shannon_Index, Simpson_Index, Evenness, Temp_top1m, Secchi, pH_top1m, PH_RESULT, ELEVATION, INDEX_SITE_DEPTH, 
+         AMMONIA_N_RESULT, ANC_RESULT, CALCIUM_RESULT, CHLORIDE_RESULT, COLOR_RESULT, COND_RESULT, DOC_RESULT, MAGNESIUM_RESULT, NTL_RESULT, PTL_RESULT,
+         NTL_DISS_RESULT, PTL_DISS_RESULT, SODIUM_RESULT, TURB_RESULT, SULFATE_RESULT, POTASSIUM_RESULT)
+
+# Check the structure to ensure you have the desired variables
+str(selected_data)
+str(selected_data2)
+str(selected_data_combine)
+# Compute the Spearman correlation matrix
+spearman_cor <- cor(selected_data, method = "spearman", use = "complete.obs")
+spearman_cor2 <- cor(selected_data2, method = "spearman", use = "complete.obs")
+spearman_cor3 <- cor(selected_data_combine, method = "spearman", use = "complete.obs")
+
+# Visualize the correlation matrix
+corrplot(spearman_cor, method = "color", type = "upper", 
+         tl.col = "black", tl.srt = 45,
+         title = "Spearman Rank Correlation Matrix", mar = c(0, 0, 1, 0))
+
+corrplot(spearman_cor2, method = "color", type = "upper", 
+         tl.col = "black", tl.srt = 45,
+         title = "Spearman Rank Correlation Matrix", mar = c(0, 0, 1, 0))
+
+
+corrplot(spearman_cor3, method = "color", type = "upper", 
+         tl.col = "black", tl.srt = 45,
+         title = "Spearman Rank Correlation Matrix", mar = c(0, 0, 1, 0))
+###################################################################################################################################################################
+# Load necessary libraries
+library(dplyr)
+library(ggcorrplot)
+#test run with few selected variables
+# Select specific numeric variables 
+selected_data <- combined_data7A %>%
+  select(AMMONIA_N_RESULT, ANC_RESULT, CALCIUM_RESULT, CHLA_RESULT, 
+         CHLORIDE_RESULT, DOC_RESULT, MAGNESIUM_RESULT, NTL_RESULT, 
+         PH_RESULT, SODIUM_RESULT, TURB_RESULT, MICX, CYLSPER)
+
+# Compute the Spearman correlation matrix
+spearman_cor <- cor(selected_data, method = "spearman", use = "complete.obs")
+
+# Function to compute correlation and p-value
+cor_test <- function(x, y) {
+  test <- cor.test(x, y, method = "spearman")
+  return(c(cor = test$estimate, p.value = test$p.value))
+}
+
+# Prepare matrices for correlation and p-values
+n_vars <- ncol(selected_data)
+p_matrix <- matrix(1, n_vars, n_vars)
+rownames(p_matrix) <- colnames(selected_data)
+colnames(p_matrix) <- colnames(selected_data)
+
+# Loop through the matrix to fill p-values
+for (i in 1:(n_vars - 1)) {
+  for (j in (i + 1):n_vars) {
+    result <- cor_test(selected_data[[i]], selected_data[[j]])
+    p_matrix[i, j] <- result["p.value"]
+    p_matrix[j, i] <- result["p.value"]
+  }
+}
+
+# Visualize with ggcorrplot
+# insignificant correlations (p > sig.level) are left blank in the plot below.
+ggcorrplot(spearman_cor, 
+           method = "circle",     # Use "circle" or "square"
+           type = "upper", 
+           lab = TRUE, 
+           p.mat = p_matrix, 
+           sig.level = 0.05, 
+           insig = "blank", 
+           title = "Spearman Rank Correlation Matrix with P-values")
+############################################################################################################################################################################4combined
+# Select specific numeric variables
+names(selected_data_combine)
+
+# Compute the Spearman correlation matrix
+spearman_cor_p <- cor(selected_data_combine, method = "spearman", use = "complete.obs")
+
+# Function to compute correlation and p-value
+cor_test <- function(x, y) {
+  test <- cor.test(x, y, method = "spearman")
+  return(c(cor = test$estimate, p.value = test$p.value))
+}
+
+# Prepare matrices for correlation and p-values
+n_vars <- ncol(selected_data_combine)
+p_matrix <- matrix(1, n_vars, n_vars)
+rownames(p_matrix) <- colnames(selected_data_combine)
+colnames(p_matrix) <- colnames(selected_data_combine)
+
+# Loop through the matrix to fill p-values
+for (i in 1:(n_vars - 1)) {
+  for (j in (i + 1):n_vars) {
+    result <- cor_test(selected_data_combine[[i]], selected_data_combine[[j]])
+    p_matrix[i, j] <- result["p.value"]
+    p_matrix[j, i] <- result["p.value"]
+  }
+}
+
+# Visualize with ggcorrplot-
+# insignificant correlations (p > sig.level) are left blank in the plot below.
+ggcorrplot(spearman_cor_p, 
+           method = "circle",     # Use "circle" or "square"
+           type = "upper", 
+           lab = TRUE, 
+           p.mat = p_matrix, 
+           sig.level = 0.05, 
+           insig = "blank", 
+           title = "Spearman Rank Correlation Matrix with P-values")  ####A VERY GOOD INFORMATIVE PLOT
+######################################################################################################################FOR SPECIES LEVEL DATA
+library(tidyr)
+library(dplyr)
+names(phytoplanktoncount2022_data)
+# Transform the data to a wider format with a summarizing function
+phytoplankton_SPECIES <- phytoplanktoncount2022_data %>%
+  select(UNIQUE_ID, TARGET_TAXON, SITE_ID,  DATE_COL, VISIT_NO, BIOVOLUME) %>%
+  pivot_wider(
+    names_from = TARGET_TAXON,
+    values_from = BIOVOLUME,
+    values_fill = list(BIOVOLUME = 0),  # Fill missing values with 0
+    values_fn = list(BIOVOLUME = sum)   # Sum BIOVOLUME values for each combination
+  )
+
+# Check the structure and preview the data
+str(phytoplankton_SPECIES)
+head(phytoplankton_SPECIES)
+names(phytoplankton_SPECIES)
+
+
+#to make species longer
+species_long <- phytoplankton_SPECIES %>%
+  pivot_longer(
+    cols = -c(UNIQUE_ID, SITE_ID, DATE_COL, VISIT_NO),  # Exclude the identifying columns
+    names_to = "Species", 
+    values_to = "Biovolume"
+  )
+
+# Check the structure to confirm the transformation
+str(species_long)
+colnames(phytoplankton_SPECIES)
+
+# Select only species columns (excluding identifiers)
+species_numeric <- phytoplankton_SPECIES %>%
+  select(-UNIQUE_ID, -SITE_ID, -DATE_COL, -VISIT_NO)
+
+# Ensure data is numeric
+species_numeric <- as.data.frame(lapply(species_numeric, as.numeric))
+
+# Check for columns with all zeros or missing values
+species_numeric <- species_numeric[, colSums(!is.na(species_numeric)) > 0]
+species_numeric <- species_numeric[, colSums(species_numeric != 0) > 0]
+
+# Calculate Spearman correlation matrix
+spearman_cor <- cor(species_numeric, method = "spearman", use = "complete.obs")
+
+# Visualize the correlation matrix
+corrplot(spearman_cor, method = "color", type = "upper", 
+         tl.col = "black", tl.srt = 45,
+         title = "Spearman Rank Correlation Matrix", mar = c(0, 0, 1, 0)) #SPECIES LEVEL PLOTS ARE MESSY
+################################################################################
+#lets consider Group by Taxonomy (Genus)
+
+library(dplyr)
+library(stringr)
+
+# Group by genus (first part of the species name) and sum the biovolume
+phytoplankton_grouped <- phytoplanktoncount2022_data %>%
+  mutate(
+    Genus = word(TARGET_TAXON, 1)  # Extract the first word as genus
+  ) %>%
+  group_by(UNIQUE_ID, SITE_ID, DATE_COL, VISIT_NO, Genus) %>%
+  summarize(Total_Biovolume = sum(BIOVOLUME, na.rm = TRUE), .groups = "drop")
+
+# Check the structure
+str(phytoplankton_grouped)
+
+#MAKE WIDER
+phytoplankton_wide_GROUP <- phytoplankton_grouped %>%
+  pivot_wider(
+    id_cols = c(UNIQUE_ID, SITE_ID, DATE_COL, VISIT_NO),
+    names_from = Genus,
+    values_from = Total_Biovolume,
+    values_fill = 0
+  )
+
+names(phytoplankton_wide_GROUP)
+
+selected_phytoplankton_wide_GROUP <- phytoplankton_wide_GROUP %>%
+  select(SITE_ID, ANABAENOPSIS, ANABAENA, APHANIZOMENON, APHANOCAPSA, ARTHROSPIRA, CHRYSOSPORUM, CUSPIDOTHRIX, #rEMOVE SITE ID TO RUN CORRELATION TEST
+         RAPHIDIOPSIS, CYLINDROSPERMOPSIS, DOLICHOSPERMUM, GEITLERINEMA,    #NO DESMONOSTOC, FISCHERELLA, HAPALOSIPHON, PLECTONEMA, MICROCOLEUS Genus
+         GLOEOTRICHIA, LEPTOLYNGBYA, LIMNOTHRIX, MERISMOPEDIA, 
+         PHORMIDIUM, MICROCYSTIS, LYNGBYA, NOSTOC, OSCILLATORIA, PLANKTOTHRIX, PSEUDANABAENA, #No MICROSEIRA, RIVULARIA, SCYTONEMA, STENOMITOS, TOLYPOTHRIX, TRICHODESMIUM,
+         RADIOCYSTIS, ROMERIA, SNOWELLA, SPHAEROSPERMOPSIS, SYNECHOCOCCUS,           #No TRICHORMUS, UMEZAKIA,
+         SYNECHOCYSTIS,  WORONICHINIA)
+
+# Check the structure to ensure you have the desired variables
+str(selected_phytoplankton_wide_GROUP)
+# Compute the Spearman correlation matrix
+
+spearman_cor3 <- cor(selected_phytoplankton_wide_GROUP, method = "spearman", use = "complete.obs")
+
+# Visualize the correlation matrix
+corrplot(spearman_cor3, method = "color", type = "upper", 
+         tl.col = "black", tl.srt = 45,
+         title = "Spearman Rank Correlation Matrix", mar = c(0, 0, 1, 0)) #Cyano groups only
+########################################################################################
+
+#JOIN THE NEW GENUS WITH  selected_data_combine
+#selected_phytoplankton_wide_GROUP
+#toxin2022_DL
+
+#Join phyto GENUS data with toxin2022_DL
+
+combined_data8 <- left_join(toxin2022_DL, selected_phytoplankton_wide_GROUP, 
+                             by = c("SITE_ID"),
+                             relationship = "many-to-many") #note
+names(combined_data8)
+str(combined_data8)
+# Select only species columns (excluding identifiers)
+combined_data8_numeric <- combined_data8 %>%
+  select(-UNIQUE_ID, -SITE_ID, -DATE_COL, -VISIT_NO)
+str(combined_data8_numeric)
+
+# Compute the Spearman correlation matrix
+
+spearman_cor4 <- cor(combined_data8_numeric, method = "spearman", use = "complete.obs")
+
+# Visualize the correlation matrix
+corrplot(spearman_cor4, method = "color", type = "upper", 
+         tl.col = "black", tl.srt = 45,
+         title = "Spearman Rank Correlation Matrix", mar = c(0, 0, 1, 0)) #Cyano groups and TOXINS
+
+#PLOT ANOTHER WITH P-VALUE
+# Function to compute correlation and p-value
+cor_test <- function(x, y) {
+  test <- cor.test(x, y, method = "spearman")
+  return(c(cor = test$estimate, p.value = test$p.value))
+}
+
+# Prepare matrices for correlation and p-values
+n_vars <- ncol(combined_data8_numeric)
+p_matrix <- matrix(1, n_vars, n_vars)
+rownames(p_matrix) <- colnames(combined_data8_numeric)
+colnames(p_matrix) <- colnames(combined_data8_numeric)
+
+# Loop through the matrix to fill p-values
+for (i in 1:(n_vars - 1)) {
+  for (j in (i + 1):n_vars) {
+    result <- cor_test(combined_data8_numeric[[i]], combined_data8_numeric[[j]])
+    p_matrix[i, j] <- result["p.value"]
+    p_matrix[j, i] <- result["p.value"]
+  }
+}
+
+# Visualize with ggcorrplot-
+# insignificant correlations (p > sig.level) are left blank in the plot below.
+ggcorrplot(spearman_cor4, 
+           method = "circle",     # Use "circle" or "square"
+           type = "upper", 
+           lab = TRUE, 
+           p.mat = p_matrix, 
+           sig.level = 0.05, 
+           insig = "blank", 
+           title = "Spearman Rank Correlation Matrix with P-values") #good plot #Cyano groups and TOXINS plus p-value consideration.
+###################################################################################################################4PCA
+
+# Load required libraries
+library(dplyr)
+library(tidyr)
+
+selected_data_combine2 <- combined_data7A %>%
+  select(SITE_ID, MICX, CYLSPER, CHLA_RESULT, total_phytoplankton_biovolume, total_cyanobacteria_biovolume, PTOX_biovolume, percent_cyanobacteria_biovolume,
+         percent_PTOX_biovolume, Shannon_Index, Simpson_Index, Evenness, Temp_top1m, Secchi, pH_top1m, PH_RESULT, ELEVATION, INDEX_SITE_DEPTH, 
+         AMMONIA_N_RESULT, ANC_RESULT, CALCIUM_RESULT, CHLORIDE_RESULT, COLOR_RESULT, COND_RESULT, DOC_RESULT, MAGNESIUM_RESULT, NTL_RESULT, PTL_RESULT,
+         NTL_DISS_RESULT, PTL_DISS_RESULT, SODIUM_RESULT, TURB_RESULT, SULFATE_RESULT, POTASSIUM_RESULT)
+
+# Select numeric columns from selected_data_combine
+selected_physics <- selected_data_combine2 %>% 
+  select_if(is.numeric)
+
+# Check structure
+str(selected_physics)
+
+# Check structure of selected_phytoplankton_wide_GROUP
+str(selected_phytoplankton_wide_GROUP)
+
+# Ensure both datasets have the same number of rows
+nrow(selected_physics) == nrow(selected_phytoplankton_wide_GROUP) #SHOWS FALSE
+
+# Ensure that UNIQUE_ID is present in both datasets
+# First, inspect the structure of each dataset to confirm the presence of UNIQUE_ID
+str(selected_data_combine2)
+str(selected_phytoplankton_wide_GROUP)
+
+# Merge datasets by UNIQUE_ID
+
+combined_data_pca <- selected_data_combine2 %>%
+  left_join(selected_phytoplankton_wide_GROUP, by = "SITE_ID", relationship = "many-to-many")
+
+# Check for missing values after merging
+summary(combined_data_pca)
+
+# Remove rows with missing values
+combined_data_pca_clean <- combined_data_pca %>% 
+  select(-SITE_ID) %>%  # Remove the identifier for PCA
+  na.omit()
+names(combined_data_pca)
+# Check the structure to confirm alignment
+str(combined_data_pca_clean)
+
+# Scale the dataset
+combined_data_scaled <- scale(combined_data_pca_clean)
+
+# Perform PCA
+pca_model <- prcomp(combined_data_scaled, center = TRUE, scale. = TRUE)
+
+# Summary of PCA
+summary(pca_model)
+
+# Install necessary libraries
+if (!requireNamespace("factoextra", quietly = TRUE)) {
+  install.packages("factoextra")
+}
+
+library(factoextra)
+
+# Extract the contributions for PC1 and PC2
+contributions <- abs(pca_model$rotation[, 1:2])  # Absolute values of loadings for PC1 and PC2
+contrib_sums <- rowSums(contributions)  # Sum of contributions for PC1 and PC2
+
+# Identify top 10 contributing variables
+top_vars <- names(sort(contrib_sums, decreasing = TRUE)[1:10])
+
+# Plot with points and reduced variable labels
+fviz_pca_biplot(pca_model, 
+                repel = TRUE, 
+                col.var = "steelblue", 
+                col.ind = "gray", 
+                pointshape = 16, 
+                pointsize = 3, 
+                alpha.ind = 0.6, 
+                select.var = list(name = top_vars),
+                title = "PCA Biplot: Selected Variables and Data Points")
+###########################################################################################
+# Extract PCA coordinates
+pca_ind <- as.data.frame(pca_model$x)
+pca_var <- as.data.frame(pca_model$rotation)
+
+# Plot using ggplot
+library(ggplot2)
+
+ggplot() +
+  geom_point(data = pca_ind, aes(x = PC1, y = PC2), color = "gray", alpha = 0.6) +
+  geom_segment(data = pca_var, aes(x = 0, y = 0, xend = PC1 * 5, yend = PC2 * 5), 
+               arrow = arrow(length = unit(0.2, "cm")), color = "steelblue") +
+  geom_text(data = pca_var, aes(x = PC1 * 5, y = PC2 * 5, label = rownames(pca_var)), 
+            size = 3, vjust = -0.5) +
+  theme_minimal() +
+  labs(title = "Customized PCA Biplot")
+#############################################
+# Load necessary libraries
+library(ggplot2)
+library(FactoMineR)
+library(factoextra)
+
+
+# Perform PCA
+pca_res <- PCA(combined_data_scaled, graph = FALSE)
+
+# Scree Plot
+fviz_eig(pca_res, addlabels = TRUE, ylim = c(0, 50)) + 
+  ggtitle('Scree Plot')
+
+# Cumulative Variance Plot
+eig_values <- pca_res$eig
+cum_var <- cumsum(eig_values[, 2])
+plot(cum_var, type = 'b', xlab = 'Number of Components', ylab = 'Cumulative Variance (%)',
+     main = 'Cumulative Variance Plot', pch = 16, col = 'blue')
+
+# Biplot
+fviz_pca_biplot(pca_res, repel = TRUE, 
+                col.var = 'red', col.ind = 'white', #USED TO SEE ONLY THE VARIBLES WHILE THE INDIVIDUAL OBERVATION ARE MADE WHITE 
+                title = 'PCA Biplot')
+
+fviz_pca_biplot(pca_res, repel = TRUE, 
+                col.var = 'red', col.ind = 'gray', 
+                title = 'PCA Biplot')
+########################################################Sparse PCA
+install.packages("elasticnet")
+library(elasticnet)
+
+
+
+# Perform Sparse PCA
+# Here, we set K = 2 for two components and use a moderate sparsity parameter
+spca_res <- spca(combined_data_scaled, K = 2, sparse = "penalty", para = c(0.5, 0.5))
+
+# Print the sparse loadings
+print(spca_res$loadings)
+
+
+# Perform Sparse PCA
+set.seed(123) # For reproducibility
+spca_res <- spca(combined_data_scaled, K = 2, sparse = "penalty", para = c(0.5, 0.5))
+
+# Assuming `combined_data_scaled` is the original scaled data matrix
+# Extract loadings
+loadings <- spca_res$loadings
+
+# Compute scores as the dot product of the scaled data and loadings
+scores <- as.data.frame(combined_data_scaled %*% loadings)
+
+# Assign appropriate column names
+colnames(scores) <- paste0("PC", 1:ncol(scores))
+
+# View the first few rows
+head(scores)
+
+
+# Convert to data frame for ggplot
+scores_df <- as.data.frame(scores)
+loadings_df <- as.data.frame(loadings)
+colnames(scores_df) <- c("PC1", "PC2")
+colnames(loadings_df) <- c("PC1", "PC2")
+
+# Plotting
+ggplot() +
+  # Plot the scores (individuals)
+  geom_point(data = scores_df, aes(x = PC1, y = PC2), color = "gray", alpha = 0.6) +
+  
+  # Plot the loadings (variables)
+  geom_segment(data = loadings_df, aes(x = 0, y = 0, xend = PC1 * 3, yend = PC2 * 3), 
+               arrow = arrow(length = unit(0.3, "cm")), color = "red") +
+  geom_text(data = loadings_df, aes(x = PC1 * 3, y = PC2 * 3, label = rownames(loadings_df)), 
+            color = "red", vjust = -0.5) +
+  
+  labs(title = "Sparse PCA Biplot", x = "PC1", y = "PC2") +         #PLOTS STILL NOT GOOD 
+  theme_minimal()
+#######################################################################################################################################
+## Load necessary library
+library(dplyr)
+
+# Create depth group variable
+combined_data_pca <- combined_data_pca %>%
+  mutate(Depth_Group = case_when(
+    INDEX_SITE_DEPTH < 2 ~ "<2",
+    INDEX_SITE_DEPTH >= 2 & INDEX_SITE_DEPTH < 5 ~ "2-4.99",
+    INDEX_SITE_DEPTH >= 5 & INDEX_SITE_DEPTH < 10 ~ "5-9.99",
+    INDEX_SITE_DEPTH >= 10 ~ ">10"
+  ))
+names(combined_data_pca)
+# Check the new column
+head(combined_data_pca$Depth_Group)
+
+# Load necessary libraries
+library(dplyr)
+library(ggplot2)
+library(factoextra)
+
+# Create depth group variable as a factor
+combined_data_pca <- combined_data_pca %>%
+  mutate(Depth_Group = factor(case_when(
+    INDEX_SITE_DEPTH < 2 ~ "<2",
+    INDEX_SITE_DEPTH >= 2 & INDEX_SITE_DEPTH < 5 ~ "2-4.99",
+    INDEX_SITE_DEPTH >= 5 & INDEX_SITE_DEPTH < 10 ~ "5-9.99",
+    INDEX_SITE_DEPTH >= 10 ~ ">10"
+  ), levels = c("<2", "2-4.99", "5-9.99", ">10")))
+
+# Check the structure of the new column
+str(combined_data_pca$Depth_Group)
+
+# Perform PCA
+# Ensure the dataset only includes numeric columns for PCA
+data_for_pca <- combined_data_pca %>%
+  select(-SITE_ID, -Depth_Group)  # Remove non-numeric columns
+
+
+# Check for missing values
+colSums(is.na(data_for_pca))
+
+# Option 1: Remove rows with missing values
+data_for_pca_clean <- na.omit(data_for_pca)
+
+# Re-run PCA
+pca_res <- prcomp(data_for_pca_clean, scale. = TRUE)
+
+# Check PCA results
+summary(pca_res)
+
+# Synchronize rows
+combined_data_pca_clean <- combined_data_pca[rownames(data_for_pca_clean), ]
+
+# Check the dimensions to ensure they match
+nrow(data_for_pca_clean)
+nrow(combined_data_pca_clean)
+
+# Run PCA
+pca_res <- prcomp(data_for_pca_clean, scale. = TRUE)
+
+# Add PCA scores to the dataset
+pca_scores <- as.data.frame(pca_res$x)
+pca_scores$Depth_Group <- combined_data_pca_clean$Depth_Group
+
+# Plot PCA grouped by Depth_Group
+ggplot(pca_scores, aes(x = PC1, y = PC2, color = Depth_Group)) +
+  geom_point(size = 4, alpha = 0.7) +
+  labs(title = "PCA Plot Grouped by Depth Group", x = "PC1", y = "PC2") +
+  theme_minimal() +
+  theme(legend.position = "right")
+
+###################################################
+library(FactoMineR)
+library(factoextra)
+
+# Ensure Depth_Group is a factor
+combined_data_pca_clean$Depth_Group <- factor(combined_data_pca_clean$Depth_Group)
+
+# Perform PCA
+pca_res2 <- PCA(data_for_pca_clean, graph = FALSE)
+
+# Biplot grouped by Depth_Group
+fviz_pca_biplot(pca_res2, repel = TRUE, 
+                col.var = "black", 
+                col.ind = combined_data_pca_clean$Depth_Group,  # Color by Depth_Group
+                palette = c("#00AFBB", "#E7B800", "#FC4E07", "#0073C2"),  # Customize colors
+                addEllipses = TRUE,  # Add concentration ellipses
+                title = "PCA Biplot Grouped by Depth Group")
+################################################################################################REGRESSION TREE MODELS###
+# Load necessary libraries
+library(rpart)
+library(rpart.plot)
+
+
+# Define the predictors
+predictors <- combined_data_pca[, c("CHLA_RESULT", "total_phytoplankton_biovolume", "total_cyanobacteria_biovolume", 
+                                    "PTOX_biovolume", "percent_cyanobacteria_biovolume", "percent_PTOX_biovolume", 
+                                    "Shannon_Index", "Simpson_Index", "Evenness", "Temp_top1m", "Secchi", 
+                                    "pH_top1m", "PH_RESULT", "ELEVATION", "INDEX_SITE_DEPTH", 
+                                    "AMMONIA_N_RESULT", "ANC_RESULT", "CALCIUM_RESULT", "CHLORIDE_RESULT", 
+                                    "COLOR_RESULT", "COND_RESULT", "DOC_RESULT", "MAGNESIUM_RESULT", "NTL_RESULT", 
+                                    "PTL_RESULT", "NTL_DISS_RESULT", "PTL_DISS_RESULT", "SODIUM_RESULT", 
+                                    "TURB_RESULT", "SULFATE_RESULT", "POTASSIUM_RESULT")]
+
+# Response variable
+response <- combined_data_pca$MICX
+
+# Combine predictors and response into one dataset
+data_for_tree <- data.frame(MICX = response, predictors)
+
+# Remove rows with missing values
+data_for_tree <- na.omit(data_for_tree)
+
+# Fit the regression tree model
+set.seed(123)  # For reproducibility
+tree_model <- rpart(MICX ~ ., data = data_for_tree, method = "anova")
+
+# Plot the regression tree
+rpart.plot(tree_model, main = "Regression Tree for MICX", type = 3, extra = 101, under = TRUE) #GOOD PLOT
+
+# Display the model summary
+print(tree_model)
+
+# Complexity parameter table to determine optimal tree size
+printcp(tree_model)
+
+# Plot cross-validation results
+plotcp(tree_model)
+
+# Prune the tree based on optimal CP
+optimal_cp <- tree_model$cptable[which.min(tree_model$cptable[,"xerror"]), "CP"]
+pruned_tree <- prune(tree_model, cp = optimal_cp)
+
+# Plot the pruned tree
+rpart.plot(pruned_tree, main = "Pruned Regression Tree for MICX", type = 3, extra = 101, under = TRUE)
+
+#####################################################################################################################repeat FOR CYLSPER
+# Response variable
+response2 <- combined_data_pca$CYLSPER
+
+# Combine predictors and response into one dataset
+data_for_tree2 <- data.frame(CYLSPER = response2, predictors)
+
+# Remove rows with missing values
+data_for_tree2 <- na.omit(data_for_tree2)
+
+# Fit the regression tree model
+set.seed(123)  # For reproducibility
+tree_model2 <- rpart(CYLSPER ~ ., data = data_for_tree2, method = "anova")
+
+# Plot the regression tree
+rpart.plot(tree_model2, main = "Regression Tree for CYLSPER", type = 3, extra = 101, under = TRUE) #GOOD PLOT
+
+# Display the model summary
+print(tree_model2)
+
+# Complexity parameter table to determine optimal tree size
+printcp(tree_model2)
+
+# Plot cross-validation results
+plotcp(tree_model2)
+
+# Prune the tree based on optimal CP
+optimal_cp2 <- tree_model2$cptable[which.min(tree_model2$cptable[,"xerror"]), "CP"]
+pruned_tree2 <- prune(tree_model2, cp = optimal_cp2)
+
+# Plot the pruned tree
+rpart.plot(pruned_tree2, main = "Pruned Regression Tree for CYLSPER", type = 3, extra = 101, under = TRUE)
+####################################################################################################################################cyanobacteria/CHLA/PHYTOPLANKON/genus species-eg microcystis
+##remeber to replace group with biovolumes
+names(combined_data_pca)
+# Define the predictors
+predictors_phy <- combined_data_pca[, c("Temp_top1m", "Secchi", 
+                                    "pH_top1m", "PH_RESULT", "ELEVATION", "INDEX_SITE_DEPTH", 
+                                    "AMMONIA_N_RESULT", "ANC_RESULT", "CALCIUM_RESULT", "CHLORIDE_RESULT", 
+                                    "COLOR_RESULT", "COND_RESULT", "DOC_RESULT", "MAGNESIUM_RESULT", "NTL_RESULT", 
+                                    "PTL_RESULT", "NTL_DISS_RESULT", "PTL_DISS_RESULT", "SODIUM_RESULT", 
+                                    "TURB_RESULT", "SULFATE_RESULT", "POTASSIUM_RESULT")]
+
+# Response variable
+response3 <- combined_data_pca$DOLICHOSPERMUM
+
+# Combine predictors and response into one dataset
+data_for_tree3 <- data.frame(DOLICHOSPERMUM = response3, predictors_phy)
+
+# Remove rows with missing values
+data_for_tree <- na.omit(data_for_tree3)
+
+# Fit the regression tree model
+set.seed(123)  # For reproducibility
+tree_model3 <- rpart(DOLICHOSPERMUM ~ ., data = data_for_tree3, method = "anova")
+
+# Plot the regression tree
+rpart.plot(tree_model3, main = "Regression Tree for DOLICHOSPERMUM group", type = 3, extra = 101, under = TRUE) #GOOD PLOT ##remeber to replace group with biovolumes
+
+# Display the model summary
+print(tree_model3)
+
+# Complexity parameter table to determine optimal tree size
+printcp(tree_model3)
+
+# Plot cross-validation results
+plotcp(tree_model3)
+
+# Prune the tree based on optimal CP
+optimal_cp3 <- tree_model3$cptable[which.min(tree_model3$cptable[,"xerror"]), "CP"]
+pruned_tree3 <- prune(tree_model3, cp = optimal_cp3)
+
+# Plot the pruned tree
+rpart.plot(pruned_tree3, main = "Pruned Regression Tree for MICX", type = 3, extra = 101, under = TRUE)
+
+##remeber to replace group with biovolumes, and see if the trees are the same or different
+##################################################################################################################################################trying GAMM MODELS
+
+# FIXME
+library(tidyverse)
+library(cowplot)
+theme_set(theme_cowplot())
+library(ggplot2)
+library(mgcv)
+library(fitdistrplus)
+
+
+#Make-SITE_ID FACTOR
+combined_data_pca$SITE_ID <-as.factor(combined_data_pca$SITE_ID)
+
+# Remove NA values and convert MICX to a vector
+x <- as.vector(na.omit(combined_data_pca$MICX))
+# Fit a log-normal distribution
+fit_log <- fitdist(x, distr = "lnorm", method = "mle") #fits a bit better then just gamma?
+# Plot the fitted log-normal distribution
+plot(fit_log)
+
+
+
+#fist model for MIC #THIS ACTUALLY TAKES A LONG TIME TO RUN!#stopped the iteration at 63 after over 4hours, REDUCED INTERATION TO 10. THE R2 IS -VE. 
+MIC_try <- gamm(
+  formula = MICX ~ s(CHLA_RESULT) + s(total_phytoplankton_biovolume) + s(total_cyanobacteria_biovolume) + s(PTOX_biovolume) + s(percent_cyanobacteria_biovolume) + 
+    s(Shannon_Index) + s(Simpson_Index) + s(Evenness) + s(Temp_top1m) + s(Secchi) + s(PH_RESULT) + s(ELEVATION) + s(INDEX_SITE_DEPTH) + s(ANC_RESULT) +s(CALCIUM_RESULT) + 
+    s(CHLORIDE_RESULT) + s(COLOR_RESULT) + s(COND_RESULT) + s(DOC_RESULT) + s(MAGNESIUM_RESULT) + s(NTL_RESULT) + s(PTL_RESULT) + s(NTL_DISS_RESULT) + s(PTL_DISS_RESULT) +
+    s(SODIUM_RESULT) + s(TURB_RESULT) + s(SULFATE_RESULT) + s(POTASSIUM_RESULT), 
+  random = list(SITE_ID = ~1),
+  family = Gamma(link = "log"),  
+  data = combined_data_pca,
+  niterPQL = 10) 
+
+#REDUCED INTERATION TO 10. THE R2 OF THE MODEL -VE. 
+######################################################################TRY AGAIN WITH GAUSSIAN FAMILY
+# Apply log transformation to the response variable
+combined_data_pca$log_MICX <- log(combined_data_pca$MICX + 1)  # Adding 1 to handle zeros
+
+# Fit the model with Gaussian family and log link
+MIC_try2 <- gamm(
+  formula = log_MICX ~ s(CHLA_RESULT) + s(total_phytoplankton_biovolume) + s(total_cyanobacteria_biovolume) + s(PTOX_biovolume) + 
+    s(percent_cyanobacteria_biovolume) + s(Shannon_Index) + s(Simpson_Index) + s(Evenness) + s(Temp_top1m) + s(Secchi) + 
+    s(PH_RESULT) + s(ELEVATION) + s(INDEX_SITE_DEPTH) + s(ANC_RESULT) + s(CALCIUM_RESULT) + s(CHLORIDE_RESULT) + 
+    s(COLOR_RESULT) + s(COND_RESULT) + s(DOC_RESULT) + s(MAGNESIUM_RESULT) + s(NTL_RESULT) + s(PTL_RESULT) + 
+    s(NTL_DISS_RESULT) + s(PTL_DISS_RESULT) + s(SODIUM_RESULT) + s(TURB_RESULT) + s(SULFATE_RESULT) + s(POTASSIUM_RESULT), 
+  random = list(SITE_ID = ~1),
+  family = gaussian(link = "log"),  
+  data = combined_data_pca,
+  niterPQL = 10
+)
+#remove log_MICX use the MICX directly
+MIC_try <- gamm(
+  formula = MICX ~ s(CHLA_RESULT) + s(total_phytoplankton_biovolume) + s(total_cyanobacteria_biovolume) + s(PTOX_biovolume) + 
+    s(percent_cyanobacteria_biovolume) + s(Shannon_Index) + s(Simpson_Index) + s(Evenness) + s(Temp_top1m) + s(Secchi) + 
+    s(PH_RESULT) + s(ELEVATION) + s(INDEX_SITE_DEPTH) + s(ANC_RESULT) + s(CALCIUM_RESULT) + s(CHLORIDE_RESULT) + 
+    s(COLOR_RESULT) + s(COND_RESULT) + s(DOC_RESULT) + s(MAGNESIUM_RESULT) + s(NTL_RESULT) + s(PTL_RESULT) + 
+    s(NTL_DISS_RESULT) + s(PTL_DISS_RESULT) + s(SODIUM_RESULT) + s(TURB_RESULT) + s(SULFATE_RESULT) + s(POTASSIUM_RESULT), 
+  random = list(SITE_ID = ~1),
+  family = gaussian(link = "log"),  
+  data = combined_data_pca,
+  niterPQL = 10
+)
+#####################################################much better MIC_try2 r2 here is 0.252.but fixed effects are -ve?? except temp sig +ve
+#View GAM summary
+
+#summary.gam(MIC_try$gam) #WITHOUT Log MICX r2 = 46.2, BUT error is high and it may not make sense of the data.
+#summary(MIC_try$lme)
+
+
+#View GAM summary
+summary.gam(MIC_try2$gam)
+
+#view LME summary
+summary(MIC_try2$lme)
+
+
+#Plot GAM with customized color for aesthetic (page number may be adjusted)
+plot_gam_custom <- function(MIC_try2, shade_color = "steelblue2") {
+  plot(MIC_try2, shade = TRUE, shade.col = shade_color, pages = 8, main = "MIC_try2")}
+plot_gam_custom(MIC_try2$gam)
+
+#Plot LME 
+plot(MIC_try2$lme, cex = 2, pch = 19, main = "Fitted Values Vs. Standardized Residuals in MIC_try2")
+#######################################################################################
+#FOR CYLSPER
+
+# Apply log transformation to the response variable
+combined_data_pca$log_CYLSPER <- log(combined_data_pca$CYLSPER + 1)  # Adding 1 to handle zeros
+
+# Fit the model with Gaussian family and log link
+MIC_try3 <- gamm(
+  formula = log_CYLSPER ~ s(CHLA_RESULT) + s(total_phytoplankton_biovolume) + s(total_cyanobacteria_biovolume) + s(PTOX_biovolume) + 
+    s(percent_cyanobacteria_biovolume) + s(Shannon_Index) + s(Simpson_Index) + s(Evenness) + s(Temp_top1m) + s(Secchi) + 
+    s(PH_RESULT) + s(ELEVATION) + s(INDEX_SITE_DEPTH) + s(ANC_RESULT) + s(CALCIUM_RESULT) + s(CHLORIDE_RESULT) + 
+    s(COLOR_RESULT) + s(COND_RESULT) + s(DOC_RESULT) + s(MAGNESIUM_RESULT) + s(NTL_RESULT) + s(PTL_RESULT) + 
+    s(NTL_DISS_RESULT) + s(PTL_DISS_RESULT) + s(SODIUM_RESULT) + s(TURB_RESULT) + s(SULFATE_RESULT) + s(POTASSIUM_RESULT), 
+  random = list(SITE_ID = ~1),
+  family = gaussian(link = "log"),  
+  data = combined_data_pca,
+  niterPQL = 10
+)
+
+#View GAM summary
+summary.gam(MIC_try3$gam)
+
+#view LME summary
+summary(MIC_try3$lme)
+
+
+#Plot GAM with customized color for aesthetic (page number may be adjusted)
+plot_gam_custom <- function(MIC_try3, shade_color = "steelblue2") {
+  plot(MIC_try3, shade = TRUE, shade.col = shade_color, pages = 8, main = "MIC_try3")}
+plot_gam_custom(MIC_try3$gam)
+
+#Plot LME 
+plot(MIC_try3$lme, cex = 2, pch = 19, main = "Fitted Values Vs. Standardized Residuals in MIC_try3")
+
+##########TRY CYSPER AGAIN WITH GAMMA DISTRIBUTION
+
+#get MIC as a vector to check distribution
+x<-as.vector(na.omit(combined_data_pca$CYLSPER))
+fit <- fitdist(x, distr = "gamma", method = "mle")
+plot(fit)
+
+# Fit the model with GAMMA
+MIC_try4 <- gamm(
+  formula = CYLSPER ~ s(CHLA_RESULT) + s(total_phytoplankton_biovolume) + s(total_cyanobacteria_biovolume) + s(PTOX_biovolume) + 
+    s(percent_cyanobacteria_biovolume) + s(Shannon_Index) + s(Simpson_Index) + s(Evenness) + s(Temp_top1m) + s(Secchi) + 
+    s(PH_RESULT) + s(ELEVATION) + s(INDEX_SITE_DEPTH) + s(ANC_RESULT) + s(CALCIUM_RESULT) + s(CHLORIDE_RESULT) + 
+    s(COLOR_RESULT) + s(COND_RESULT) + s(DOC_RESULT) + s(MAGNESIUM_RESULT) + s(NTL_RESULT) + s(PTL_RESULT) + 
+    s(NTL_DISS_RESULT) + s(PTL_DISS_RESULT) + s(SODIUM_RESULT) + s(TURB_RESULT) + s(SULFATE_RESULT) + s(POTASSIUM_RESULT), 
+  random = list(SITE_ID = ~1),
+  family = Gamma(link = "log"),  
+  data = combined_data_pca,
+  niterPQL = 10
+)
+
+#View GAM summary
+summary.gam(MIC_try4$gam)
+
+#view LME summary
+summary(MIC_try4$lme)
+
+
+#Plot GAM with customized color for aesthetic (page number may be adjusted)
+plot_gam_custom <- function(MIC_try4, shade_color = "pink") {
+  plot(MIC_try4, shade = TRUE, shade.col = shade_color, pages = 8, main = "CYLSPER_try")} #MIC_try4 RENAMED CYLSPER_try
+plot_gam_custom(MIC_try4$gam)
+
+#Plot LME 
+plot(MIC_try4$lme, cex = 2, pch = 19, main = "Fitted Values Vs. Standardized Residuals in CYLSPER_try") # THIS plot FOR MICTRY4 LOOK MORE BETTER WITH GAMMA AS IT SHOWS DOTTED LIKE WITH NO CLEAR PATTERNS AROUND 0. 
+
+
+#####################################################################################CONDITIONAL INFERENCE TREE
+
+#conditional inference tree
+# Load the necessary libraries
+
+library(party) #install if neccesary
+library(dplyr)
+
+# Ensure MICX is numeric
+combined_data_pca$MICX <- as.numeric(combined_data_pca$MICX)
+
+# Define the predictors
+predictors <- c("CHLA_RESULT", "total_phytoplankton_biovolume", "total_cyanobacteria_biovolume", "PTOX_biovolume", 
+                "percent_cyanobacteria_biovolume", "Shannon_Index", "Simpson_Index", "Evenness", "Temp_top1m", 
+                "Secchi", "PH_RESULT", "ELEVATION", "INDEX_SITE_DEPTH", "ANC_RESULT", "CALCIUM_RESULT", 
+                "CHLORIDE_RESULT", "COLOR_RESULT", "COND_RESULT", "DOC_RESULT", "MAGNESIUM_RESULT", 
+                "NTL_RESULT", "PTL_RESULT", "NTL_DISS_RESULT", "PTL_DISS_RESULT", "SODIUM_RESULT", 
+                "TURB_RESULT", "SULFATE_RESULT", "POTASSIUM_RESULT")
+
+# Create the formula
+formula <- as.formula(paste("MICX ~", paste(predictors, collapse = " + ")))
+
+# Fit the conditional inference tree
+micx_ctree <- ctree(formula, data = combined_data_pca)
+
+# Plot the tree
+plot(micx_ctree, main = "Conditional Inference Tree for MICX")
+
+# Print the summary of the tree
+summary(micx_ctree)
+print(micx_ctree) #TO SEE THE RESULTS IN EACH NODES
+
+
+
+
+###FOR CYLSPER####################################################################
+# Ensure CYLSPER is numeric
+combined_data_pca$CYLSPER <- as.numeric(combined_data_pca$CYLSPER)
+
+# Define the predictors
+predictors <- c("CHLA_RESULT", "total_phytoplankton_biovolume", "total_cyanobacteria_biovolume", "PTOX_biovolume", 
+                "percent_cyanobacteria_biovolume", "Shannon_Index", "Simpson_Index", "Evenness", "Temp_top1m", 
+                "Secchi", "PH_RESULT", "ELEVATION", "INDEX_SITE_DEPTH", "ANC_RESULT", "CALCIUM_RESULT", 
+                "CHLORIDE_RESULT", "COLOR_RESULT", "COND_RESULT", "DOC_RESULT", "MAGNESIUM_RESULT", 
+                "NTL_RESULT", "PTL_RESULT", "NTL_DISS_RESULT", "PTL_DISS_RESULT", "SODIUM_RESULT", 
+                "TURB_RESULT", "SULFATE_RESULT", "POTASSIUM_RESULT")
+
+# Create the formula
+formula2 <- as.formula(paste("CYLSPER ~", paste(predictors, collapse = " + ")))
+
+# Fit the conditional inference tree
+cylsper_ctree <- ctree(formula2, data = combined_data_pca)
+#####################
+
+
+# Plot the tree
+plot(cylsper_ctree, main = "Conditional Inference Tree for CYLSPER")
+
+# Print the summary of the tree
+summary(cylsper_ctree)
+print(cylsper_ctree) #TO SEE THE RESULTS IN EACH NODES
+###################################################################################for cynobacteria biovolume
+# Ensure total_cyanobacteria_biovolume is numeric
+combined_data_pca$total_cyanobacteria_biovolume <- as.numeric(combined_data_pca$total_cyanobacteria_biovolume)
+
+# Define the predictors
+predictors2 <- c("Temp_top1m", 
+                "Secchi", "PH_RESULT", "ELEVATION", "INDEX_SITE_DEPTH", "ANC_RESULT", "CALCIUM_RESULT", 
+                "CHLORIDE_RESULT", "COLOR_RESULT", "COND_RESULT", "DOC_RESULT", "MAGNESIUM_RESULT", 
+                "NTL_RESULT", "PTL_RESULT", "NTL_DISS_RESULT", "PTL_DISS_RESULT", "SODIUM_RESULT", 
+                "TURB_RESULT", "SULFATE_RESULT", "POTASSIUM_RESULT")
+
+# Create the formula
+formula3 <- as.formula(paste("total_cyanobacteria_biovolume ~", paste(predictors2, collapse = " + ")))
+
+# Fit the conditional inference tree
+cyano_ctree <- ctree(formula3, data = combined_data_pca)
+
+# Plot the tree
+plot(cyano_ctree, main = "Conditional Inference Tree for cyanobacteria biovolume")
+
+# Print the summary of the tree
+summary(cyano_ctree)
+print(cyano_ctree) #TO SEE THE RESULTS IN EACH NODES
+#######################################################################
+#quick summary of the data
+summary(combined_data_pca) #Max. MICX = 355.0 # #Max. CYLSPER = 3.550
+
+################################For total phytopklanton 
+
+# Ensure total_phytoplankton_biovolume is numeric
+combined_data_pca$total_phytoplankton_biovolume <- as.numeric(combined_data_pca$total_phytoplankton_biovolume)
+
+# Define the predictors
+predictors2 <- c("Temp_top1m", 
+                 "Secchi", "PH_RESULT", "ELEVATION", "INDEX_SITE_DEPTH", "ANC_RESULT", "CALCIUM_RESULT", 
+                 "CHLORIDE_RESULT", "COLOR_RESULT", "COND_RESULT", "DOC_RESULT", "MAGNESIUM_RESULT", 
+                 "NTL_RESULT", "PTL_RESULT", "NTL_DISS_RESULT", "PTL_DISS_RESULT", "SODIUM_RESULT", 
+                 "TURB_RESULT", "SULFATE_RESULT", "POTASSIUM_RESULT")
+
+# Create the formula
+formula4 <- as.formula(paste("total_phytoplankton_biovolume ~", paste(predictors2, collapse = " + ")))
+
+# Fit the conditional inference tree
+phyto_ctree <- ctree(formula4, data = combined_data_pca)
+
+# Plot the tree
+plot(phyto_ctree, main = "Conditional Inference Tree for total_phytoplankton_biovolume")
+
+# Print the summary of the tree
+summary(phyto_ctree)
+print(phyto_ctree) #TO SEE THE RESULTS IN EACH NODES
+########################################################################For CHLA
+
+
+# Ensure CHLA_RESULT is numeric
+combined_data_pca$CHLA_RESULT <- as.numeric(combined_data_pca$CHLA_RESULT)
+
+# Define the predictors
+predictors2 <- c("Temp_top1m", 
+                 "Secchi", "PH_RESULT", "ELEVATION", "INDEX_SITE_DEPTH", "ANC_RESULT", "CALCIUM_RESULT", 
+                 "CHLORIDE_RESULT", "COLOR_RESULT", "COND_RESULT", "DOC_RESULT", "MAGNESIUM_RESULT", 
+                 "NTL_RESULT", "PTL_RESULT", "NTL_DISS_RESULT", "PTL_DISS_RESULT", "SODIUM_RESULT", 
+                 "TURB_RESULT", "SULFATE_RESULT", "POTASSIUM_RESULT")
+
+
+# Remove rows with missing response values
+combined_data_pca_clean <- combined_data_pca[!is.na(combined_data_pca$CHLA_RESULT), ]
+
+# Create the formula
+formula5 <- as.formula(paste("CHLA_RESULT ~", paste(predictors2, collapse = " + ")))
+
+# Fit the conditional inference tree
+CHLA_ctree <- ctree(formula5, data = combined_data_pca_clean)
+
+# Plot the tree
+plot(CHLA_ctree, main = "Conditional Inference Tree for CHLA_RESULT")
+
+# Print the summary of the tree
+summary(CHLA_ctree)
+print(CHLA_ctree) #TO SEE THE RESULTS IN EACH NODES
+#############################################################################################Cyanobacteria genus vs MIC AND CYLSPER
+#later-use depth group "Depth_Group" 
+names(combined_data_pca)
+
+# Ensure MICX is numeric
+combined_data_pca$MICX <- as.numeric(combined_data_pca$MICX)
+
+# Define the predictors
+predictors3 <- c("CHLA_RESULT", "total_phytoplankton_biovolume", "total_cyanobacteria_biovolume", "PTOX_biovolume", 
+                "percent_cyanobacteria_biovolume", "Shannon_Index", "Simpson_Index", "Evenness",
+                "ANABAENOPSIS","ANABAENA", "APHANIZOMENON", "APHANOCAPSA", "ARTHROSPIRA", "CHRYSOSPORUM",                  
+                "CUSPIDOTHRIX","RAPHIDIOPSIS", "CYLINDROSPERMOPSIS", "DOLICHOSPERMUM", "GEITLERINEMA",                   
+                "GLOEOTRICHIA", "LEPTOLYNGBYA","LIMNOTHRIX", "MERISMOPEDIA", "PHORMIDIUM", "MICROCYSTIS",
+                "LYNGBYA","NOSTOC","OSCILLATORIA", "PLANKTOTHRIX","PSEUDANABAENA", "RADIOCYSTIS", "ROMERIA",
+                "SNOWELLA", "SPHAEROSPERMOPSIS","SYNECHOCOCCUS", "SYNECHOCYSTIS","WORONICHINIA")
+
+
+                    
+
+
+# Create the formula
+formula1B <- as.formula(paste("MICX ~", paste(predictors3, collapse = " + ")))
+
+# Fit the conditional inference tree
+micx_ctree1b <- ctree(formula1B, data = combined_data_pca)
+
+# Plot the tree
+plot(micx_ctree1b, main = "Conditional Inference Tree for MICX")
+
+# Print the summary of the tree
+summary(micx_ctree1b)
+print(micx_ctree1b) #TO SEE THE RESULTS IN EACH NODES
+############################################# CYSPER
+
+# Ensure CYLSPER is numeric
+combined_data_pca$CYLSPER <- as.numeric(combined_data_pca$CYLSPER)
+
+# Define the predictors
+predictors3 <- c("CHLA_RESULT", "total_phytoplankton_biovolume", "total_cyanobacteria_biovolume", "PTOX_biovolume", 
+                 "percent_cyanobacteria_biovolume", "Shannon_Index", "Simpson_Index", "Evenness",
+                 "ANABAENOPSIS","ANABAENA", "APHANIZOMENON", "APHANOCAPSA", "ARTHROSPIRA", "CHRYSOSPORUM",                  
+                 "CUSPIDOTHRIX","RAPHIDIOPSIS", "CYLINDROSPERMOPSIS", "DOLICHOSPERMUM", "GEITLERINEMA",                   
+                 "GLOEOTRICHIA", "LEPTOLYNGBYA","LIMNOTHRIX", "MERISMOPEDIA", "PHORMIDIUM", "MICROCYSTIS",
+                 "LYNGBYA","NOSTOC","OSCILLATORIA", "PLANKTOTHRIX","PSEUDANABAENA", "RADIOCYSTIS", "ROMERIA",
+                 "SNOWELLA", "SPHAEROSPERMOPSIS","SYNECHOCOCCUS", "SYNECHOCYSTIS","WORONICHINIA")
+
+
+
+
+
+# Create the formula
+formula1C <- as.formula(paste("CYLSPER ~", paste(predictors3, collapse = " + ")))
+
+# Fit the conditional inference tree
+micx_ctree1c <- ctree(formula1C, data = combined_data_pca)
+
+# Plot the tree
+plot(micx_ctree1c, main = "Conditional Inference Tree for CYLSPER")
+
+# Print the summary of the tree
+summary(micx_ctree1c)
+print(micx_ctree1c) #TO SEE THE RESULTS IN EACH NODES
+####################################################################
+#plot with removed CHLA- and other predictors REMAIN ONLY CYANO GENUS- plots makes no sense hence ignore.
+######################################################################
