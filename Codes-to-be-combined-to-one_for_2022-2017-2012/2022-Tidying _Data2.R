@@ -1761,3 +1761,1124 @@ print(micx_ctree1c) #TO SEE THE RESULTS IN EACH NODES
 ####################################################################
 #plot with removed CHLA- and other predictors REMAIN ONLY CYANO GENUS- plots makes no sense hence ignore.
 ######################################################################
+##################################################################################################################Added from local 6/12/25
+###################################################################################################################CREATE SALINITY COLUMN
+
+names(combined_data_pca)
+
+# Create a new salinity column as the sum of selected ion concentrations
+combined_data_pca$salinity <- rowSums(combined_data_pca[, c("CALCIUM_RESULT", 
+                                                            "MAGNESIUM_RESULT", 
+                                                            "SODIUM_RESULT", 
+                                                            "POTASSIUM_RESULT", 
+                                                            "CHLORIDE_RESULT",
+                                                            "SULFATE_RESULT")], 
+                                      na.rm = TRUE)
+
+names(combined_data_pca)
+
+#plots SALINITY VS MICX
+combined_data_pca %>%
+  ggplot(aes(x = salinity, y = MICX)) + #Change variables as many times as possible
+  geom_point() +
+  geom_smooth(method = "lm", se = TRUE, color = "red") +
+  scale_x_log10() +
+  scale_y_log10() +
+  stat_cor(method = "spearman", label.x = 1, label.y = 2, aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")))+ #Note: R VALUES IN THE PLOT REPRESENT RHO VALUE.
+  theme_bw()
+
+#plots SALINITY VS CYLSPER
+combined_data_pca %>%
+  ggplot(aes(x = salinity, y = CYLSPER)) + #Change variables as many times as possible
+  geom_point() +
+  geom_smooth(method = "lm", se = TRUE, color = "red") +
+  scale_x_log10() +
+  scale_y_log10() +
+  stat_cor(method = "spearman", label.x = 1, label.y = 2, aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")))+ #Note: R VALUES IN THE PLOT REPRESENT RHO VALUE.
+  theme_bw()
+#plots SALINITY VS Total cyanobacteria
+combined_data_pca %>%
+  ggplot(aes(x = salinity, y = APHANIZOMENON)) + #Change variables as many times as possible
+  geom_point() +
+  geom_smooth(method = "lm", se = TRUE, color = "red") +
+  scale_x_log10() +
+  scale_y_log10() +
+  stat_cor(method = "spearman", label.x = 1, label.y = 2, aes(label = paste(..r.label.., ..p.label.., sep = "~`,`~")))+ #Note: R VALUES IN THE PLOT REPRESENT RHO VALUE.
+  theme_bw()
+
+#REDO CORRELATION MATRIX TO INCLUDE SALINITY
+
+
+names(combined_data_pca)
+
+
+selected_data_salinity <- dplyr::select(
+  combined_data_pca,
+  MICX, CYLSPER, CHLA_RESULT, total_phytoplankton_biovolume,
+  total_cyanobacteria_biovolume, PTOX_biovolume, percent_cyanobacteria_biovolume,
+  percent_PTOX_biovolume, Shannon_Index, Simpson_Index, Evenness, salinity, Temp_top1m,
+  Secchi, pH_top1m, PH_RESULT, ELEVATION, INDEX_SITE_DEPTH, AMMONIA_N_RESULT,
+  ANC_RESULT, CALCIUM_RESULT, CHLORIDE_RESULT, COLOR_RESULT, COND_RESULT,
+  DOC_RESULT, MAGNESIUM_RESULT, NTL_RESULT, PTL_RESULT, NTL_DISS_RESULT,
+  PTL_DISS_RESULT, SODIUM_RESULT, TURB_RESULT, SULFATE_RESULT, POTASSIUM_RESULT
+)
+
+# Check the structure to ensure you have the desired variables
+str(selected_data_salinity)
+
+# Compute the Spearman correlation matrix
+spearman_corA <- cor(selected_data_salinity, method = "spearman", use = "complete.obs")
+
+# Visualize the correlation matrix
+corrplot(spearman_corA, method = "color", type = "upper", 
+         tl.col = "black", tl.srt = 45,
+         title = "Spearman Rank Correlation Matrix", mar = c(0, 0, 1, 0))
+
+###plt2
+# Function to compute correlation and p-value
+cor_test <- function(x, y) {
+  test <- cor.test(x, y, method = "spearman")
+  return(c(cor = test$estimate, p.value = test$p.value))
+}
+
+# Prepare matrices for correlation and p-values
+n_vars <- ncol(selected_data_salinity)
+p_matrix <- matrix(1, n_vars, n_vars)
+rownames(p_matrix) <- colnames(selected_data_salinity)
+colnames(p_matrix) <- colnames(selected_data_salinity)
+
+# Loop through the matrix to fill p-values
+for (i in 1:(n_vars - 1)) {
+  for (j in (i + 1):n_vars) {
+    result <- cor_test(selected_data_salinity[[i]], selected_data_salinity[[j]])
+    p_matrix[i, j] <- result["p.value"]
+    p_matrix[j, i] <- result["p.value"]
+  }
+}
+
+# Visualize with ggcorrplot
+# insignificant correlations (p > sig.level) are left blank in the plot below.
+ggcorrplot(spearman_corA, 
+           method = "square",     # Use "circle" or "square"
+           type = "upper", 
+           lab = TRUE, 
+           p.mat = p_matrix, 
+           sig.level = 0.05, 
+           insig = "blank", 
+           title = "Spearman Rank Correlation Matrix with P-values")
+###################################################################################SALINITY VS CYANO GROUPS
+
+names(combined_data_pca)
+
+selected_data_CYANO_SALT <- dplyr::select(
+  combined_data_pca,
+  salinity, ANABAENOPSIS, ANABAENA, APHANIZOMENON, APHANOCAPSA, ARTHROSPIRA, CHRYSOSPORUM, CUSPIDOTHRIX, 
+  RAPHIDIOPSIS, CYLINDROSPERMOPSIS, DOLICHOSPERMUM, GEITLERINEMA,    
+  GLOEOTRICHIA, LEPTOLYNGBYA, LIMNOTHRIX, MERISMOPEDIA, 
+  PHORMIDIUM, MICROCYSTIS, LYNGBYA, NOSTOC, OSCILLATORIA, PLANKTOTHRIX, PSEUDANABAENA, 
+  RADIOCYSTIS, ROMERIA, SNOWELLA, SPHAEROSPERMOPSIS, SYNECHOCOCCUS,           
+  SYNECHOCYSTIS,  WORONICHINIA
+)
+
+
+# Compute the Spearman correlation matrix
+spearman_corB <- cor(selected_data_CYANO_SALT, method = "spearman", use = "complete.obs")
+
+###plt2
+# Function to compute correlation and p-value
+cor_test <- function(x, y) {
+  test <- cor.test(x, y, method = "spearman")
+  return(c(cor = test$estimate, p.value = test$p.value))
+}
+
+# Prepare matrices for correlation and p-values
+n_vars <- ncol(selected_data_CYANO_SALT)
+p_matrix <- matrix(1, n_vars, n_vars)
+rownames(p_matrix) <- colnames(selected_data_CYANO_SALT)
+colnames(p_matrix) <- colnames(selected_data_CYANO_SALT)
+
+# Loop through the matrix to fill p-values
+for (i in 1:(n_vars - 1)) {
+  for (j in (i + 1):n_vars) {
+    result <- cor_test(selected_data_CYANO_SALT[[i]], selected_data_CYANO_SALT[[j]])
+    p_matrix[i, j] <- result["p.value"]
+    p_matrix[j, i] <- result["p.value"]
+  }
+}
+
+# Visualize with ggcorrplot
+# insignificant correlations (p > sig.level) are left blank in the plot below.
+ggcorrplot(spearman_corB, 
+           method = "square",     # Use "circle" or "square"
+           type = "upper", 
+           lab = TRUE, 
+           p.mat = p_matrix, 
+           sig.level = 0.05, 
+           insig = "blank", 
+           title = "Spearman Rank Correlation Matrix with P-values")
+
+##################################################################################Map of Diversity Metrics
+
+#Map of Diversity Metrics
+combined_data7A %>% 
+  ggplot(aes(x = LON_DD83, y = LAT_DD83, color = Shannon_Index)) +
+  geom_point(size = 3) +
+  scale_color_viridis_c() +
+  labs(title = "Spatial Variation in Shannon Diversity")
+
+#Evenness
+combined_data7A %>% 
+  ggplot(aes(x = LON_DD83, y = LAT_DD83, color = Evenness)) +
+  geom_point(size = 3) +
+  scale_color_viridis_c() +
+  labs(title = "Spatial Variation in Evenness")
+
+#Evenness
+combined_data7A %>% 
+  ggplot(aes(x = LON_DD83, y = LAT_DD83, color = Evenness)) +
+  geom_point(size = 3) +
+  scale_color_viridis_c() +
+  labs(title = "Spatial Variation in Evenness")
+
+
+
+#Updated Code with Base Map of the U.S.
+# Load necessary packages
+library(ggplot2)
+library(dplyr)
+library(maps) #install.packages("maps") if necessary
+library(viridis)
+
+# Get US map data
+us_map <- map_data("state")
+
+# Plot the map with lake points
+ggplot() +
+  # Base map
+  geom_polygon(data = us_map, aes(x = long, y = lat, group = group), 
+               fill = "gray90", color = "white") +
+  
+  # Points for lakes
+  geom_point(data = combined_data7A, 
+             aes(x = LON_DD83, y = LAT_DD83, color = Shannon_Index), 
+             size = 2.5, alpha = 0.8) +
+  
+  scale_color_viridis_c(option = "C") +
+  coord_fixed(1.3) +  # Keeps map aspect ratio
+  theme_minimal() +
+  labs(
+    title = "Spatial Variation in Shannon Diversity (NLA Lakes)",
+    x = "Longitude", y = "Latitude",
+    color = "Shannon Index"
+  )
+
+#################################
+#create new combined data to select lat and long
+
+names(combined_data7A)
+
+selected_data_combine_NEW <- dplyr::select(
+  combined_data7A, SITE_ID, LAT_DD83, LON_DD83, MICX, CYLSPER, CHLA_RESULT, total_phytoplankton_biovolume, total_cyanobacteria_biovolume, PTOX_biovolume, percent_cyanobacteria_biovolume,
+  percent_PTOX_biovolume, Shannon_Index, Simpson_Index, Evenness, Temp_top1m, Secchi, pH_top1m, PH_RESULT, ELEVATION, INDEX_SITE_DEPTH, 
+  AMMONIA_N_RESULT, ANC_RESULT, CALCIUM_RESULT, CHLORIDE_RESULT, COLOR_RESULT, COND_RESULT, DOC_RESULT, MAGNESIUM_RESULT, NTL_RESULT, PTL_RESULT,
+  NTL_DISS_RESULT, PTL_DISS_RESULT, SODIUM_RESULT, TURB_RESULT, SULFATE_RESULT, POTASSIUM_RESULT
+)
+
+###############################################################################################################
+# Merge datasets by UNIQUE_ID
+combined_data_pca_NEW <- selected_data_combine_NEW %>%
+  left_join(selected_phytoplankton_wide_GROUP, by = "SITE_ID", relationship = "many-to-many")
+#################################################################################################################
+# Create a new salinity column as the sum of selected ion concentrations
+combined_data_pca_NEW$salinity <- rowSums(combined_data_pca_NEW[, c("CALCIUM_RESULT", 
+                                                                    "MAGNESIUM_RESULT", 
+                                                                    "SODIUM_RESULT", 
+                                                                    "POTASSIUM_RESULT", 
+                                                                    "CHLORIDE_RESULT",
+                                                                    "SULFATE_RESULT")], 
+                                          na.rm = TRUE)
+
+names(combined_data_pca_NEW)
+
+##############################################################################################################Map of salinity accross lakes
+
+
+combined_data_pca_NEW %>% 
+  ggplot(aes(x = LON_DD83, y = LAT_DD83, color = salinity)) +
+  geom_point(size = 3) +
+  scale_color_viridis_c(limits = c(0, 1000), oob = scales::squish) +  # Adjust this range as needed
+  labs(title = "Spatial Variation in Salinity")
+
+
+combined_data_pca_NEW %>% 
+  ggplot(aes(x = LON_DD83, y = LAT_DD83, color = CHLA_RESULT)) +
+  geom_point(size = 3) +
+  scale_color_viridis_c(limits = c(0, 100), oob = scales::squish) +  # Adjust this range as needed
+  labs(title = "Spatial Variation in CHLA_RESULT")
+
+
+combined_data_pca_NEW %>% 
+  ggplot(aes(x = LON_DD83, y = LAT_DD83, color = Temp_top1m)) +
+  geom_point(size = 3) +
+  scale_color_viridis_c(limits = c(0, 35), oob = scales::squish) +  # Adjust this range as needed
+  labs(title = "Spatial Variation in Temp_top1m")
+
+combined_data_pca_NEW %>% 
+  ggplot(aes(x = LON_DD83, y = LAT_DD83, color = MICX)) +
+  geom_point(size = 3) +
+  scale_color_viridis_c(limits = c(0, 8), oob = scales::squish) +  # Adjust this range as needed
+  labs(title = "Spatial Variation in MICX")
+
+#To modify the legend to reflect that values above 8 are squished into the upper limit.
+#Load libraries
+library(ggplot2)
+library(dplyr)
+library(scales)
+
+combined_data_pca_NEW %>% 
+  ggplot(aes(x = LON_DD83, y = LAT_DD83, color = MICX)) +
+  geom_point(size = 3) +
+  scale_color_viridis_c(
+    limits = c(0, 8),
+    oob = scales::squish,
+    breaks = c(0, 2, 4, 6, 8),
+    labels = c("0", "2", "4", "6", "≥8")
+  ) +
+  labs(
+    title = "Spatial Variation in MICX",
+    color = "MICX (µg/L)"
+  ) +
+  theme_minimal()
+############################################################CYLSPER
+combined_data_pca_NEW %>% 
+  ggplot(aes(x = LON_DD83, y = LAT_DD83, color = CYLSPER)) +
+  geom_point(size = 3) +
+  scale_color_viridis_c(limits = c(0, 1), oob = scales::squish) +  # Adjust this range as needed
+  labs(title = "Spatial Variation in CYLSPER")
+#CYLSPER
+combined_data_pca_NEW %>% 
+  ggplot(aes(x = LON_DD83, y = LAT_DD83, color = CYLSPER)) +
+  geom_point(size = 3) +
+  scale_color_viridis_c(
+    limits = c(0, 1.25),
+    oob = scales::squish,
+    breaks = c(0, 0.25, 0.50, 0.75, 1.00, 1.25),
+    labels = c("0", "0.25", "0.5", "0.75", "1.00", "≥1.25")
+  ) +
+  labs(
+    title = "Spatial Variation in CYLSPER",
+    color = "CYLSPER (µg/L)"
+  ) +
+  theme_minimal()
+#########################################################MICROCYSTIS
+combined_data_pca_NEW %>% 
+  ggplot(aes(x = LON_DD83, y = LAT_DD83, color = MICROCYSTIS)) +
+  geom_point(size = 3) +
+  scale_color_viridis_c(limits = c(0, 1000000), oob = scales::squish) +  # Adjust this range as needed
+  labs(title = "Spatial Variation in MICROCYSTIS")
+
+combined_data_pca_NEW %>% 
+  ggplot(aes(x = LON_DD83, y = LAT_DD83, color = MICROCYSTIS)) +
+  geom_point(size = 3) +
+  scale_color_viridis_c(
+    limits = c(0, 1000000),
+    oob = scales::squish,
+    breaks = c(0, 250000, 500000, 750000, 1000000),
+    labels = c("0", "250000", "500000", "750000", "≥1000000")
+  ) +
+  labs(
+    title = "Spatial Variation in MICROCYSTIS",
+    color = "MICROCYSTIS (um3/ml)"
+  ) +
+  theme_minimal()
+
+
+#################################aphanizominon
+
+combined_data_pca_NEW %>% 
+  ggplot(aes(x = LON_DD83, y = LAT_DD83, color = APHANIZOMENON)) +
+  geom_point(size = 3) +
+  scale_color_viridis_c(limits = c(0, 1000000), oob = scales::squish) +  # Adjust this range as needed
+  labs(title = "Spatial Variation in APHANIZOMENON")
+
+combined_data_pca_NEW %>% 
+  ggplot(aes(x = LON_DD83, y = LAT_DD83, color = APHANIZOMENON)) +
+  geom_point(size = 3) +
+  scale_color_viridis_c(
+    limits = c(0, 1000000),
+    oob = scales::squish,
+    breaks = c(0, 250000, 500000, 750000, 1000000),
+    labels = c("0", "250000", "500000", "750000", "≥1000000")
+  ) +
+  labs(
+    title = "Spatial Variation in APHANIZOMENON",
+    color = "APHANIZOMENON (um3/ml)"
+  ) +
+  theme_minimal()
+
+################################################################################LAKE DEPTH DISTRIBUTION
+
+combined_data_pca_NEW %>% 
+  ggplot(aes(x = LON_DD83, y = LAT_DD83, color = INDEX_SITE_DEPTH)) +
+  geom_point(size = 3) +
+  scale_color_viridis_c(limits = c(0, 10), oob = scales::squish) +  # Adjust this range as needed
+  labs(title = "Spatial Variation in Zmax")
+
+combined_data_pca_NEW %>% 
+  ggplot(aes(x = LON_DD83, y = LAT_DD83, color = INDEX_SITE_DEPTH)) +
+  geom_point(size = 3) +
+  scale_color_viridis_c(
+    limits = c(0, 10),
+    oob = scales::squish,
+    breaks = c(0, 2.5, 5.0, 7.5, 10.0),
+    labels = c("0", "2.5", "5.0", "7.5", "≥10.0")
+  ) +
+  labs(
+    title = "Spatial Variation in INDEX_SITE_DEPTH",
+    color = "INDEX_SITE_DEPTH (m)"
+  ) +
+  theme_minimal()
+
+#####################################################N & P
+#PHOSPHORUS
+combined_data_pca_NEW %>% 
+  ggplot(aes(x = LON_DD83, y = LAT_DD83, color = PTL_RESULT)) +
+  geom_point(size = 3) +
+  scale_color_viridis_c(limits = c(0, 500), oob = scales::squish) +  # Adjust this range as needed
+  labs(title = "Spatial Variation in PTL_RESULT")
+
+
+combined_data_pca_NEW %>% 
+  ggplot(aes(x = LON_DD83, y = LAT_DD83, color = PTL_DISS_RESULT)) +
+  geom_point(size = 3) +
+  scale_color_viridis_c(limits = c(0, 500), oob = scales::squish) +  # Adjust this range as needed
+  labs(title = "Spatial Variation in PTL_DISS_RESULT")
+
+
+#NITROGEN
+# Convert NTL from mg/L to µg/L
+combined_data_pca_NEW <- combined_data_pca_NEW %>%
+  mutate(
+    NTL_ugL = NTL_RESULT * 1000,  # Convert NTL to µg/L
+    TN_TP_RATIO = NTL_ugL / PTL_RESULT  # Compute TN:TP ratio
+  )
+
+
+combined_data_pca_NEW %>% 
+  ggplot(aes(x = LON_DD83, y = LAT_DD83, color = NTL_ugL)) +
+  geom_point(size = 3) +
+  scale_color_viridis_c(limits = c(0, 1000), oob = scales::squish) +  # Adjust this range as needed
+  labs(title = "Spatial Variation in NTL_ugL")
+
+
+combined_data_pca_NEW %>% 
+  ggplot(aes(x = LON_DD83, y = LAT_DD83, color = TN_TP_RATIO)) +
+  geom_point(size = 3) +
+  scale_color_viridis_c(limits = c(0, 50), oob = scales::squish) +  # Adjust this range as needed
+  labs(title = "Spatial Variation in TN_TP_RATIO")
+########################################################################################################### CREATE TROPHIC CLASSIFICATION
+
+library(dplyr)
+
+combined_data_pca_NEW <- combined_data_pca_NEW %>%
+  filter(!is.na(CHLA_RESULT)) %>%
+  mutate(
+    trophic_status = case_when(
+      CHLA_RESULT <= 2 ~ "Oligotrophic",
+      CHLA_RESULT > 2 & CHLA_RESULT <= 7 ~ "Mesotrophic",
+      CHLA_RESULT > 7 & CHLA_RESULT <= 30 ~ "Eutrophic",
+      CHLA_RESULT > 30 ~ "Hypereutrophic",
+      TRUE ~ NA_character_
+    )
+  )
+
+names(combined_data_pca_NEW)
+
+#map trophic
+library(dplyr)
+library(ggplot2)
+
+# Ensure the trophic_status is a factor with the correct order
+combined_data_pca_NEW <- combined_data_pca_NEW %>%
+  mutate(trophic_status = factor(trophic_status,
+                                 levels = c("Oligotrophic", "Mesotrophic", "Eutrophic", "Hypereutrophic")))
+
+# Create the plot with custom colors
+combined_data_pca_NEW %>%
+  filter(!is.na(trophic_status)) %>% #removed NA, as the initial plot had NA group
+  ggplot(aes(x = LON_DD83, y = LAT_DD83, color = trophic_status)) +
+  geom_point(size = 3) +
+  scale_color_manual(values = c(
+    "Oligotrophic" = "#1f78b4",    # blue
+    "Mesotrophic" = "#33a02c",     # green
+    "Eutrophic" = "#ffcc00",       # yellow
+    "Hypereutrophic" = "#e31a1c"   # red
+  )) +
+  labs(title = "Spatial Variation in Trophic Status",
+       color = "Trophic Status") +
+  theme_minimal()
+##############################PLOT WITH US MAPS
+library(ggplot2)
+library(dplyr)
+library(maps)  # For state boundaries
+
+# Ensure the trophic_status is a factor with the correct order
+combined_data_pca_NEW <- combined_data_pca_NEW %>%
+  mutate(trophic_status = factor(trophic_status,
+                                 levels = c("Oligotrophic", "Mesotrophic", "Eutrophic", "Hypereutrophic")))
+
+# Get U.S. state map data
+us_states <- map_data("state")
+
+# Plot
+ggplot() +
+  # Add state map
+  geom_polygon(data = us_states, aes(x = long, y = lat, group = group),
+               fill = "gray90", color = "white") +
+  
+  # Add lake points colored by trophic status
+  geom_point(data = combined_data_pca_NEW %>% filter(!is.na(trophic_status)),
+             aes(x = LON_DD83, y = LAT_DD83, color = trophic_status),
+             size = 3) +
+  
+  # Set color scale
+  scale_color_manual(values = c(
+    "Oligotrophic" = "#1f78b4",    # blue
+    "Mesotrophic" = "#33a02c",     # green
+    "Eutrophic" = "#ffcc00",       # yellow
+    "Hypereutrophic" = "#e31a1c"   # red
+  )) +
+  
+  # Map labels and theme
+  labs(title = "Spatial Variation in Trophic Status",
+       color = "Trophic Status") +
+  coord_fixed(1.3) +  # Keeps map aspect ratio
+  theme_minimal()
+
+###########################################################boxplot of MICX across trophic categories
+# Load required libraries
+library(ggplot2)
+library(dplyr)
+library(ggpubr)  # for stat_compare_means
+
+# Ensure trophic_status is an ordered factor
+combined_data_pca_NEW$trophic_status <- factor(
+  combined_data_pca_NEW$trophic_status,
+  levels = c("Oligotrophic", "Mesotrophic", "Eutrophic", "Hypereutrophic")
+)
+
+# Filter to remove extreme MICX values
+filtered_data <- combined_data_pca_NEW %>%
+  filter(MICX <= 300, !is.na(trophic_status))
+
+# Create the boxplot
+# Create the boxplot
+# Create the boxplot with log-scaled y-axis
+ggplot(filtered_data, aes(x = trophic_status, y = MICX, fill = trophic_status)) +
+  geom_boxplot() +
+  scale_fill_manual(values = c(
+    "Oligotrophic" = "#1f78b4",
+    "Mesotrophic" = "#33a02c",
+    "Eutrophic" = "#ffcc00",
+    "Hypereutrophic" = "#e31a1c"
+  )) +
+  scale_y_log10() +
+  labs(
+    title = "MICX Concentration by Trophic Status (Log Scale)",
+    x = "Trophic Status",
+    y = "MICX (µg/L, log scale)"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none") +
+  stat_compare_means(
+    method = "kruskal.test", 
+    label.y = log10(max(filtered_data$MICX, na.rm = TRUE)) * 1.1
+  ) +
+  stat_compare_means(
+    comparisons = list(
+      c("Oligotrophic", "Mesotrophic"),
+      c("Mesotrophic", "Eutrophic"),
+      c("Eutrophic", "Hypereutrophic"),
+      c("Oligotrophic", "Hypereutrophic")
+    ),
+    method = "wilcox.test"
+  )
+#####################################################################CYLSPER
+
+# Ensure trophic_status is an ordered factor
+combined_data_pca_NEW$trophic_status <- factor(
+  combined_data_pca_NEW$trophic_status,
+  levels = c("Oligotrophic", "Mesotrophic", "Eutrophic", "Hypereutrophic")
+)
+
+
+# Create the boxplot
+# Create the boxplot
+# Create the boxplot with log-scaled y-axis
+ggplot(filtered_data, aes(x = trophic_status, y = CYLSPER, fill = trophic_status)) +
+  geom_boxplot() +
+  scale_fill_manual(values = c(
+    "Oligotrophic" = "#1f78b4",
+    "Mesotrophic" = "#33a02c",
+    "Eutrophic" = "#ffcc00",
+    "Hypereutrophic" = "#e31a1c"
+  )) +
+  scale_y_log10() +
+  labs(
+    title = "CYLSPER Concentration by Trophic Status (Log Scale)",
+    x = "Trophic Status",
+    y = "CYLSPER (µg/L, log scale)"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none") +
+  stat_compare_means(
+    method = "kruskal.test", 
+    label.y = log10(max(filtered_data$CYLSPER, na.rm = TRUE)) * 1.1
+  ) +
+  stat_compare_means(
+    comparisons = list(
+      c("Oligotrophic", "Mesotrophic"),
+      c("Mesotrophic", "Eutrophic"),
+      c("Eutrophic", "Hypereutrophic"),
+      c("Oligotrophic", "Hypereutrophic")
+    ),
+    method = "wilcox.test"
+  )
+####################################################################To create two separate correlation matrix 
+
+# Load necessary libraries
+library(ggcorrplot)
+
+# Define toxin and taxa variable names
+toxin_vars <- c("MICX", "CYLSPER")
+taxa_vars <- c("ANABAENOPSIS", "ANABAENA", "APHANIZOMENON", "APHANOCAPSA",
+               "ARTHROSPIRA", "CHRYSOSPORUM", "CUSPIDOTHRIX", "RAPHIDIOPSIS",
+               "CYLINDROSPERMOPSIS", "DOLICHOSPERMUM", "GEITLERINEMA", "GLOEOTRICHIA",
+               "LEPTOLYNGBYA", "LIMNOTHRIX", "MERISMOPEDIA", "PHORMIDIUM",
+               "MICROCYSTIS", "LYNGBYA", "NOSTOC", "OSCILLATORIA", "PLANKTOTHRIX",
+               "PSEUDANABAENA", "RADIOCYSTIS", "ROMERIA", "SNOWELLA",
+               "SPHAEROSPERMOPSIS", "SYNECHOCOCCUS", "SYNECHOCYSTIS", "WORONICHINIA")
+
+# Subset the data
+selected_data <- combined_data8_numeric[, c(toxin_vars, taxa_vars)]
+
+# Compute Spearman correlation matrix
+cor_matrix <- cor(selected_data, method = "spearman", use = "complete.obs")
+
+# Compute p-value matrix
+p_matrix <- matrix(1, ncol = ncol(selected_data), nrow = ncol(selected_data))
+rownames(p_matrix) <- colnames(p_matrix) <- colnames(selected_data)
+
+for (i in 1:(ncol(selected_data) - 1)) {
+  for (j in (i + 1):ncol(selected_data)) {
+    test <- cor.test(selected_data[[i]], selected_data[[j]], method = "spearman")
+    p_matrix[i, j] <- test$p.value
+    p_matrix[j, i] <- test$p.value
+  }
+}
+
+# Subset 1: MICX & CYLSPER vs Taxa
+cor_MICX_CYL_vs_taxa <- cor_matrix[toxin_vars, taxa_vars]
+p_MICX_CYL_vs_taxa <- p_matrix[toxin_vars, taxa_vars]
+
+# Subset 2: Taxa vs Taxa
+cor_taxa_vs_taxa <- cor_matrix[taxa_vars, taxa_vars]
+p_taxa_vs_taxa <- p_matrix[taxa_vars, taxa_vars]
+
+# Plot 1: MICX/CYLSPER vs Taxa
+ggcorrplot(cor_MICX_CYL_vs_taxa,
+           method = "square",
+           type = "full",
+           lab = TRUE,
+           p.mat = p_MICX_CYL_vs_taxa,
+           sig.level = 0.01,
+           insig = "blank",
+           title = "MICX and CYLSPER vs Cyanobacteria Taxa")
+
+# Plot 2: Taxa vs Taxa
+ggcorrplot(cor_taxa_vs_taxa,
+           method = "square",
+           type = "upper",
+           lab = TRUE,
+           p.mat = p_taxa_vs_taxa,
+           sig.level = 0.01,
+           insig = "blank",
+           title = "Inter-correlation Among Cyanobacteria Taxa")
+
+#########
+# Plot: MICX/CYLSPER vs Taxa — Only correlation numbers, no shapes/colors
+library(ggcorrplot)
+ggcorrplot(cor_MICX_CYL_vs_taxa,
+           method = "square",        # still needed, but we neutralize it
+           type = "full",
+           lab = TRUE,               # show correlation values
+           lab_col = "black",        # text color
+           lab_size = 3.5,
+           colors = c("white", "white", "white"),  # removes fill color
+           outline.color = "white",  # removes border emphasis
+           p.mat = p_MICX_CYL_vs_taxa,
+           sig.level = 0.01,
+           insig = "blank",          # only show significant ones
+           title = "MICX and CYLSPER vs Cyanobacteria Taxa")
+
+
+#FOR TIMES NEW ROMAN FONT####################################################################
+#install.packages("extrafont")
+library(extrafont)
+#font_import()       # Only run once; takes time
+loadfonts(device = "win")  # or use `device = "pdf"` for PDFs
+
+
+#replot (make circle and lab FALSE)
+ggcorrplot(cor_MICX_CYL_vs_taxa,
+           method = "circle",
+           type = "full",
+           lab = FALSE,
+           p.mat = p_MICX_CYL_vs_taxa,
+           sig.level = 0.01,
+           insig = "blank",
+           title = "MICX and CYLSPER vs Cyanobacteria Taxa") +
+  theme(
+    text = element_text(family = "Times New Roman", face = "bold")
+  )
+##NUMBERS SHOWING ONLY PLOT
+ggcorrplot(cor_MICX_CYL_vs_taxa,
+           method = "square",  # use square to preserve structure
+           type = "full",
+           lab = TRUE,         # show correlation values
+           lab_col = "black",  # label color
+           lab_size = 3.5,
+           colors = c("white", "white", "white"),  # neutralize color fill
+           outline.color = "white",                # remove outline
+           p.mat = p_MICX_CYL_vs_taxa,
+           sig.level = 0.01,
+           insig = "blank",                        # only show significant correlations
+           title = "MICX and CYLSPER vs Cyanobacteria Taxa") +
+  theme(
+    text = element_text(family = "Times New Roman", face = "bold"),
+    plot.title = element_text(hjust = 0.5)  # center title
+  )
+##########
+#REPLOT (make circle and lab FALSE)
+# Plot 2: Taxa vs Taxa
+ggcorrplot(cor_taxa_vs_taxa,
+           method = "circle",
+           type = "upper",
+           lab = FALSE,
+           p.mat = p_taxa_vs_taxa,
+           sig.level = 0.01,
+           insig = "blank",
+           title = "Inter-correlation Among Cyanobacteria Taxa")+
+  theme(
+    text = element_text(family = "Times New Roman", face = "bold")
+  )
+###############################################################################################
+##########################################################################################Step-by-step R Code for LASSO on NLA Data
+#install.packages("glmnet")
+library(glmnet)
+library(dplyr)
+
+
+#MICX
+names(combined_data_pca_NEW)
+# Select predictors and response
+nla_data <- combined_data_pca_NEW %>%
+  select(MICX, CHLA_RESULT, total_phytoplankton_biovolume, total_cyanobacteria_biovolume, PTOX_biovolume, percent_cyanobacteria_biovolume, 
+         percent_PTOX_biovolume, Shannon_Index, Simpson_Index, Evenness, Temp_top1m, Secchi, pH_top1m, PH_RESULT, ELEVATION, INDEX_SITE_DEPTH, 
+         AMMONIA_N_RESULT, ANC_RESULT, CALCIUM_RESULT, CHLORIDE_RESULT, COLOR_RESULT, COND_RESULT, DOC_RESULT, MAGNESIUM_RESULT, NTL_RESULT, PTL_RESULT,
+         NTL_DISS_RESULT, PTL_DISS_RESULT, SODIUM_RESULT, TURB_RESULT, SULFATE_RESULT, POTASSIUM_RESULT, salinity, TN_TP_RATIO, trophic_status, 
+         ) %>%
+  na.omit()  # Remove rows with missing data
+
+#Create model matrix and response
+X <- model.matrix(MICX ~ ., data = nla_data)[, -1]  # Remove intercept column
+y <- nla_data$MICX
+
+#Run cross-validated LASSO
+set.seed(123)  # For reproducibility
+cv_lasso <- cv.glmnet(X, y, alpha = 1, standardize = TRUE)
+
+# Best lambda
+best_lambda <- cv_lasso$lambda.min
+best_lambda
+
+
+#Fit final LASSO model
+final_lasso <- glmnet(X, y, alpha = 1, lambda = best_lambda)
+
+#View selected variables
+coef(final_lasso)
+
+#This will show you which variables have non-zero coefficients, i.e., the ones LASSO selected as important for predicting MICX.
+
+#Interpretation
+#Variables with coefficients of 0: Not important; LASSO removed them
+#Non-zero coefficients: These are the most predictive variables for MICX under regularization.
+
+###PLOTS
+#You can plot cv_lasso to see how the error changes with lambda:
+plot(cv_lasso)
+
+
+############################################################FOR CYLSPER
+
+#CYLSPER
+# Select predictors and response
+nla_data2 <- combined_data_pca_NEW %>%
+  select(CYLSPER, CHLA_RESULT, total_phytoplankton_biovolume, total_cyanobacteria_biovolume, PTOX_biovolume, percent_cyanobacteria_biovolume, 
+         percent_PTOX_biovolume, Shannon_Index, Simpson_Index, Evenness, Temp_top1m, Secchi, pH_top1m, PH_RESULT, ELEVATION, INDEX_SITE_DEPTH, 
+         AMMONIA_N_RESULT, ANC_RESULT, CALCIUM_RESULT, CHLORIDE_RESULT, COLOR_RESULT, COND_RESULT, DOC_RESULT, MAGNESIUM_RESULT, NTL_RESULT, PTL_RESULT,
+         NTL_DISS_RESULT, PTL_DISS_RESULT, SODIUM_RESULT, TURB_RESULT, SULFATE_RESULT, POTASSIUM_RESULT, salinity, TN_TP_RATIO, trophic_status, 
+  ) %>%
+  na.omit()  # Remove rows with missing data
+
+#Create model matrix and response
+X <- model.matrix(CYLSPER ~ ., data = nla_data2)[, -1]  # Remove intercept column
+y <- nla_data2$CYLSPER
+
+#Run cross-validated LASSO
+set.seed(123)  # For reproducibility
+cv_lasso2 <- cv.glmnet(X, y, alpha = 1, standardize = TRUE)
+
+# Best lambda
+best_lambda2 <- cv_lasso2$lambda.min
+best_lambda2
+
+
+#Fit final LASSO model
+final_lasso <- glmnet(X, y, alpha = 1, lambda = best_lambda2)
+
+#View selected variables
+coef(final_lasso)
+
+#This will show you which variables have non-zero coefficients, i.e., the ones LASSO selected as important for predicting MICX.
+
+#Interpretation
+#Variables with coefficients of 0: Not important; LASSO removed them
+#Non-zero coefficients: These are the most predictive variables for MICX under regularization.
+
+###PLOTS
+#You can plot cv_lasso to see how the error changes with lambda:
+plot(cv_lasso)
+###########################################################################################################log toxin and replot condition tree
+
+# Apply log transformation to the response variable
+combined_data_pca$log_MICX <- log(combined_data_pca$MICX + 1)  # Adding 1 to handle zeros
+
+#conditional inference tree
+# Load the necessary libraries
+library(party) #install if neccesary
+library(dplyr)
+
+# Ensure log_MICX is numeric
+combined_data_pca$log_MICX <- as.numeric(combined_data_pca$log_MICX)
+
+# Define the predictors
+predictors <- c("CHLA_RESULT", "total_phytoplankton_biovolume", "total_cyanobacteria_biovolume", "PTOX_biovolume", 
+                "percent_cyanobacteria_biovolume", "Shannon_Index", "Simpson_Index", "Evenness", "Temp_top1m", 
+                "Secchi", "PH_RESULT", "ELEVATION", "INDEX_SITE_DEPTH", "ANC_RESULT", "CALCIUM_RESULT", 
+                "CHLORIDE_RESULT", "COLOR_RESULT", "COND_RESULT", "DOC_RESULT", "MAGNESIUM_RESULT", 
+                "NTL_RESULT", "PTL_RESULT", "NTL_DISS_RESULT", "PTL_DISS_RESULT", "SODIUM_RESULT", 
+                "TURB_RESULT", "SULFATE_RESULT", "POTASSIUM_RESULT")
+
+# Create the formula
+formula <- as.formula(paste("log_MICX ~", paste(predictors, collapse = " + ")))
+
+# Fit the conditional inference tree
+micx_ctree <- ctree(formula, data = combined_data_pca)
+
+# Plot the tree
+plot(micx_ctree, main = "Conditional Inference Tree for log_MICX")
+
+# Print the summary of the tree
+summary(micx_ctree)
+print(micx_ctree) #TO SEE THE RESULTS IN EACH NODES
+
+
+###########################check distributions
+hist(combined_data_pca$CHLA_RESULT)
+#hist(log(combined_data_pca$CHLA_RESULT + 1)) #log
+hist(log1p(combined_data_pca$CHLA_RESULT)) #log
+
+
+
+
+#################################################################CCA ANALYSIS
+# Load necessary package
+library(vegan)
+# Step 1: Prepare your data
+# Ensure both data frames are aligned by UNIQUE_ID or site
+# We'll set rownames to ensure alignment
+names(selected_phytoplankton_wide_GROUP)
+# Set row names for both to UNIQUE_ID or any consistent key
+species_data <- selected_phytoplankton_wide_GROUP
+env_data <- selected_data_combine2
+
+# Convert to data frame if it's a tibble
+species_data <- as.data.frame(selected_phytoplankton_wide_GROUP)
+env_data <- as.data.frame(selected_data_combine2)
+
+# Set rownames using UNIQUE_ID (must be unique!)
+rownames(species_data) <- species_data$UNIQUE_ID
+rownames(env_data) <- env_data$UNIQUE_ID
+
+
+# Drop non-numeric and ID columns (if present)
+species_data <- species_data[, sapply(species_data, is.numeric)]
+env_data <- env_data[, sapply(env_data, is.numeric)]
+
+# Ensure rownames match exactly
+common_ids <- intersect(rownames(species_data), rownames(env_data))
+species_data <- species_data[common_ids, ]
+env_data <- env_data[common_ids, ]
+
+# (Optional) Hellinger transformation for species data to handle many zeros
+species_hellinger <- decostand(species_data, method = "hellinger")
+
+
+# Step 2: Run CCA
+# Identify rows with total species = 0
+valid_rows <- rowSums(species_data_clean) > 0
+
+# Remove rows with NA from env_data and match species_data accordingly
+complete_cases <- complete.cases(env_data)
+env_data_clean <- env_data[complete_cases, ]
+species_data_clean <- species_hellinger[complete_cases, ]
+
+# Filter both datasets
+species_data_filtered <- species_data_clean[valid_rows, ]
+env_data_filtered <- env_data_clean[valid_rows, ]
+
+library(vegan)
+cca_model <- cca(species_data_filtered ~ ., data = env_data_filtered)
+
+# View results
+summary(cca_model)
+plot(cca_model)
+
+# Step 3: Inspect Results
+summary(cca_model)                    # Summary of the CCA model
+anova(cca_model)                      # Global test
+anova(cca_model, by = "terms")        # Test each environmental variable
+anova(cca_model, by = "axis")         # Test each axis
+
+# Step 4: Plot CCA
+plot(cca_model, display = c("species", "sites", "bp"), main = "CCA: Cyano taxa vs Environmental Variables")
+
+# Optional: clearer labels
+ordiplot(cca_model, type = "n")
+orditorp(cca_model, display = "species", col = "darkgreen", cex = 0.8)
+orditorp(cca_model, display = "sites", col = "blue", cex = 0.7)
+######################################################################################################CCA: Toxin vs Environmental Variables
+
+names(combined_data_pca_NEW)
+# Select variables
+environ_nla_data2 <- combined_data_pca_NEW %>%
+  select(SITE_ID, CHLA_RESULT, total_phytoplankton_biovolume, total_cyanobacteria_biovolume, PTOX_biovolume, percent_cyanobacteria_biovolume, 
+         percent_PTOX_biovolume, Shannon_Index, Simpson_Index, Evenness, Temp_top1m, Secchi, pH_top1m, PH_RESULT, ELEVATION, INDEX_SITE_DEPTH, 
+         AMMONIA_N_RESULT, ANC_RESULT, CALCIUM_RESULT, CHLORIDE_RESULT, COLOR_RESULT, COND_RESULT, DOC_RESULT, MAGNESIUM_RESULT, NTL_RESULT, PTL_RESULT,
+         NTL_DISS_RESULT, PTL_DISS_RESULT, SODIUM_RESULT, TURB_RESULT, SULFATE_RESULT, POTASSIUM_RESULT, 
+  ) %>%
+  na.omit()  # Remove rows with missing data
+
+names(toxin2022_DL)
+#select toxin
+select_toxin <- toxin2022_DL %>% 
+  select(SITE_ID, MICX, CYLSPER)
+
+
+# Set row names for both to UNIQUE_ID or any consistent key
+toxin_data <- select_toxin
+environ_data <- environ_nla_data2
+# Convert to data frame if it's a tibble
+toxin_data <- as.data.frame(select_toxin)
+environ_data <- as.data.frame(environ_nla_data2)
+
+# Set rownames using UNIQUE_ID (must be unique!) #it doesnot matter if uniques ID is not is the data column?
+rownames(toxin_data) <- toxin_data$UNIQUE_ID
+rownames(environ_data) <- environ_data$UNIQUE_ID
+
+# Drop non-numeric and ID columns (if present)
+toxin_data <- toxin_data[, sapply(toxin_data, is.numeric)]
+environ_data <- environ_data[, sapply(environ_data, is.numeric)]
+
+# Ensure rownames match exactly
+common_ids <- intersect(rownames(toxin_data), rownames(environ_data))
+toxin_data <- toxin_data[common_ids, ]
+environ_data <- environ_data[common_ids, ]
+
+
+cca_model_new <- cca(toxin_data ~ ., data = environ_data)
+plot(cca_model_new)
+plot(cca_model_new, main = "CCA: Toxins vs Environmental Variables")
+
+summary(cca_model_new) 
+anova(cca_model_new)                      # Global test
+anova(cca_model_new, by = "terms")        # Test each environmental variable
+anova(cca_model_new, by = "axis")         # Test each axis
+
+# Optional: clearer labels
+ordiplot(cca_model_new, type = "n")
+orditorp(cca_model_new, display = "species", col = "darkgreen", cex = 0.8)
+orditorp(cca_model_new, display = "sites", col = "blue", cex = 0.7)
+
+
+################################################
+# Enhanced cca plot with customization
+plot(cca_model_new, type = "n", scaling = 2, main = "CCA: Toxins vs Environmental Variables")   # Set up empty plot
+
+# Add elements
+points(cca_model_new, display = "sites", col = "blue", pch = 20, scaling = 2)  # sites/samples
+text(cca_model_new, display = "species", col = "red", cex = 1.2, scaling = 2)  # response vars (toxins)
+text(cca_model_new, display = "bp", col = "darkgreen", cex = 1.1, scaling = 2) # environmental variables
+##########################################################################################univariate CCA for each toxin (above) did not work overfits
+###########################################################################################try log
+
+toxin_data_log <- log1p(toxin_data)  # log(x + 1) handles zeros safely
+cca_model_log <- cca(toxin_data_log ~ ., data = environ_data)
+plot(cca_model_log)
+anova(cca_model_log)
+
+summary(cca_model_log)                    # Summary of the CCA model
+anova(cca_model_log)                      # Global test
+anova(cca_model_log, by = "terms")        # Test each environmental variable
+anova(cca_model_log, by = "axis")         # Test each axis
+
+plot(cca_model_log, main = "CCA: log_toxins vs Environmental Variables")
+
+################################################
+# Enhanced cca plot with customization
+plot(cca_model_log, type = "n", scaling = 2, main = "CCA: log_toxins vs Environmental Variables")   # Set up empty plot
+
+# Add elements
+points(cca_model_log, display = "sites", col = "blue", pch = 20, scaling = 2)  # sites/samples
+text(cca_model_log, display = "species", col = "red", cex = 1.2, scaling = 2)  # response vars (toxins)
+text(cca_model_log, display = "bp", col = "darkgreen", cex = 1.1, scaling = 2) # environmental variables
+#######################################################################################################################RDA PLOTS
+
+rda_model <- rda(toxin_data ~ ., data = environ_data)
+summary(rda_model)
+anova(rda_model)
+plot(rda_model, scaling = 2)
+
+# Enhanced RDA plot with customization
+plot(rda_model, type = "n", scaling = 2, main = "RDA: Toxins vs Environmental Variables")   # Set up empty plot
+
+# Add elements
+points(rda_model, display = "sites", col = "blue", pch = 20, scaling = 2)  # sites/samples
+text(rda_model, display = "species", col = "red", cex = 1.2, scaling = 2)  # response vars (toxins)
+text(rda_model, display = "bp", col = "darkgreen", cex = 1.1, scaling = 2) # environmental variables
+###########################################################################################LOGGED
+
+toxin_data_log <- log1p(toxin_data)  # log(x + 1) handles zeros safely
+rda_model_log <- rda(toxin_data_log ~ ., data = environ_data)
+plot(rda_model_log, type = "n", scaling = 2, main = "RDA: log_toxins vs Environmental Variables")   # Set up empty plot
+
+# Add elements
+points(rda_model_log, display = "sites", col = "blue", pch = 20, scaling = 2)  # sites/samples
+text(rda_model_log, display = "species", col = "red", cex = 1.2, scaling = 2)  # response vars (toxins)
+text(rda_model_log, display = "bp", col = "darkgreen", cex = 1.1, scaling = 2) # environmental variables
+
+summary(rda_model_log)
+anova(rda_model_log)
+
+anova(rda_model_log)                      # Global test
+anova(rda_model_log, by = "terms")        # Test each environmental variable
+anova(rda_model_log, by = "axis")         # Test each axis
+#############################################################################################REDUCE PREDICTORS
+
+library(vegan)
+#highly collinear variables (VIF > 10) to be removed
+vif.cca(rda_model)
+
+
+
+# Select  few variables
+environ_nla_data_few <- combined_data_pca_NEW %>%
+  select(SITE_ID, CHLA_RESULT, total_phytoplankton_biovolume, percent_cyanobacteria_biovolume, 
+         percent_PTOX_biovolume, Shannon_Index, Evenness, Temp_top1m, Secchi, pH_top1m, PH_RESULT, ELEVATION, INDEX_SITE_DEPTH, 
+         AMMONIA_N_RESULT, ANC_RESULT, CHLORIDE_RESULT, COLOR_RESULT, DOC_RESULT, NTL_RESULT, PTL_RESULT,
+         TURB_RESULT, POTASSIUM_RESULT, 
+  ) %>%
+  na.omit()  # Remove rows with missing data
+
+# Set row names for both to UNIQUE_ID or any consistent key
+toxin_data <- select_toxin
+environ_nla_data_few <- environ_nla_data_few
+# Convert to data frame if it's a tibble
+toxin_data <- as.data.frame(select_toxin)
+environ_nla_data_few <- as.data.frame(environ_nla_data_few)
+
+# Set rownames using UNIQUE_ID (must be unique!) #it doesnot matter if uniques ID is not is the data column?
+rownames(toxin_data) <- toxin_data$UNIQUE_ID
+rownames(environ_nla_data_few) <- environ_nla_data_few$UNIQUE_ID
+
+# Drop non-numeric and ID columns (if present)
+toxin_data <- toxin_data[, sapply(toxin_data, is.numeric)]
+environ_nla_data_few <- environ_nla_data_few[, sapply(environ_nla_data_few, is.numeric)]
+
+# Ensure rownames match exactly
+common_ids <- intersect(rownames(toxin_data), rownames(environ_nla_data_few))
+toxin_data <- toxin_data[common_ids, ]
+environ_nla_data_few <- environ_nla_data_few[common_ids, ]
+
+
+toxin_data_log <- log1p(toxin_data)  # log(x + 1) handles zeros safely
+rda_model_log2 <- rda(toxin_data_log ~ ., data = environ_nla_data_few)
+plot(rda_model_log2, type = "n", scaling = 2, main = "RDA: log_toxins vs Environmental Variables")   # Set up empty plot
+
+# Add elements
+points(rda_model_log2, display = "sites", col = "blue", pch = 20, scaling = 2)  # sites/samples
+text(rda_model_log2, display = "species", col = "red", cex = 1.2, scaling = 2)  # response vars (toxins)
+text(rda_model_log2, display = "bp", col = "darkgreen", cex = 1.1, scaling = 2) # environmental variables
+
+summary(rda_model_log2)
+anova(rda_model_log2)
+
+anova(rda_model_log2)                      # Global test
+anova(rda_model_log2, by = "terms")        # Test each environmental variable
+anova(rda_model_log2, by = "axis")         # Test each axis
+###################################################################################NON-LOG FEW SELCETED ABOVE
+
+rda_model2 <- rda(toxin_data ~ ., data = environ_nla_data_few)
+plot(rda_model2, type = "n", scaling = 2, main = "RDA: Toxins vs Environmental Variables")   # Set up empty plot
+
+# Add elements
+points(rda_model2, display = "sites", col = "blue", pch = 20, scaling = 2)  # sites/samples
+text(rda_model2, display = "species", col = "red", cex = 1.2, scaling = 2)  # response vars (toxins)
+text(rda_model2, display = "bp", col = "darkgreen", cex = 1.1, scaling = 2) # environmental variables
+
+summary(rda_model2)
+anova(rda_model2)
+
+anova(rda_model2)                      # Global test
+anova(rda_model2, by = "terms")        # Test each environmental variable
+anova(rda_model2, by = "axis")         # Test each axis
+
+############################################################################CCA WITH THE FEW DATASET  (STILL NOT A GOOD (CLEAR)PLOT COMPARE TO RDA)
+
+cca_model2A <- cca(toxin_data ~ ., data = environ_nla_data_few)
+plot(cca_model2A, type = "n", scaling = 2, main = "CCA: Toxins vs Environmental Variables")   # Set up empty plot
+
+# Add elements
+points(cca_model2A, display = "sites", col = "blue", pch = 20, scaling = 2)  # sites/samples
+text(cca_model2A, display = "species", col = "red", cex = 1.2, scaling = 2)  # response vars (toxins)
+text(cca_model2A, display = "bp", col = "darkgreen", cex = 1.1, scaling = 2) # environmental variables
+
+summary(cca_model2A)
+anova(cca_model2A)
+anova(cca_model2A, by = "terms")        # Test each environmental variable
+anova(cca_model2A, by = "axis")         # Test each axis
+################################################################LOG CCA
+cca_model2A_log <- cca(toxin_data_log ~ ., data = environ_nla_data_few)
+plot(cca_model2A_log, type = "n", scaling = 2, main = "CCA: log_toxins vs Environmental Variables")   # Set up empty plot
+
+# Add elements
+points(cca_model2A_log, display = "sites", col = "blue", pch = 20, scaling = 2)  # sites/samples
+text(cca_model2A_log, display = "species", col = "red", cex = 1.2, scaling = 2)  # response vars (toxins)
+text(cca_model2A_log, display = "bp", col = "darkgreen", cex = 1.1, scaling = 2) # environmental variables
+
+summary(cca_model2A_log)
+anova(cca_model2A_log)
+anova(cca_model2A_log, by = "terms")        # Test each environmental variable
+anova(cca_model2A_log, by = "axis")         # Test each axis
