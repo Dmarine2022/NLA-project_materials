@@ -2878,10 +2878,10 @@ text(sp_scores["CYLSPER", , drop = FALSE], labels = "CYLSPER", col = "orange", c
 text(rda_model_log, display = "bp", col = "darkgreen", cex = 1.1, scaling = 2)
 #############################################################################################aBOVE ONLY CHNGE THE LABEL NOT THE SAMPLE POINT. REDONE BELOW (Code is so much better) #REDO with the selected Envron data
 
-# Step 1: Log-transform toxin data safely
+# Log-transform toxin data safely
 toxin_data_log <- log1p(toxin_data)
 
-# Step 2: Add a group label based on dominant toxin
+# Add a group label based on dominant toxin
 dominant_toxin <- apply(toxin_data_log, 1, function(x) {
   if (x["MICX"] > x["CYLSPER"]) {
     "MICX-dominant"
@@ -2892,18 +2892,18 @@ dominant_toxin <- apply(toxin_data_log, 1, function(x) {
   }
 })
 
-# Step 3: Run RDA
+# Run RDA
 rda_model_log <- rda(toxin_data_log ~ ., data = environ_nla_data_few) #replace "environ_data" with "environ_nla_data_few"
 
-# Step 4: Extract site scores
+# Extract site scores
 site_scores <- scores(rda_model_log, display = "sites", scaling = 2)
 
-# Step 5: Plot and color points based on dominant toxin
+# Plot and color points based on dominant toxin
 plot(rda_model_log, type = "n", scaling = 2, main = "RDA: Sites Colored by Dominant Toxin (toxin_data_log)")
 cols <- c("MICX-dominant" = "red", "CYLSPER-dominant" = "blue", "Equal" = "purple")
 points(site_scores, col = cols[dominant_toxin], pch = 19)
 
-# Step 6: Add legend and labels
+# Add legend and labels
 legend("topright", legend = names(cols), col = cols, pch = 19, title = "Dominant Toxin")
 text(rda_model_log, display = "species", col = "black", cex = 1.2, scaling = 2)
 text(rda_model_log, display = "bp", col = "darkgreen", cex = 1.1, scaling = 2)
