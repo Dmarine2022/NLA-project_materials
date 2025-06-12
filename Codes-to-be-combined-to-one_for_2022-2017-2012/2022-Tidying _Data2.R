@@ -2839,7 +2839,6 @@ anova(rda_model_log2)                      # Global test
 anova(rda_model_log2, by = "terms")        # Test each environmental variable
 anova(rda_model_log2, by = "axis")         # Test each axis
 ###################################################################################NON-LOG FEW SELCETED ABOVE
-
 rda_model2 <- rda(toxin_data ~ ., data = environ_nla_data_few)
 plot(rda_model2, type = "n", scaling = 2, main = "RDA: Toxins vs Environmental Variables")   # Set up empty plot
 
@@ -2854,6 +2853,60 @@ anova(rda_model2)
 anova(rda_model2)                      # Global test
 anova(rda_model2, by = "terms")        # Test each environmental variable
 anova(rda_model2, by = "axis")         # Test each axis
+
+
+###########################################################################################color TOXIN MICX AND CYLSPER DIFFRENTLY
+
+# Run RDA
+toxin_data_log <- log1p(toxin_data)
+rda_model_log <- rda(toxin_data_log ~ ., data = environ_data)
+
+# Base plot
+plot(rda_model_log, type = "n", scaling = 2, main = "RDA: log_toxins vs Environmental Variables")
+
+# Add sites
+points(rda_model_log, display = "sites", col = "blue", pch = 20, scaling = 2)
+
+# Get species scores (toxins)
+sp_scores <- scores(rda_model_log, display = "species", scaling = 2)
+
+# Plot each toxin with a different color
+text(sp_scores["MICX", , drop = FALSE], labels = "MICX", col = "red", cex = 1.2)
+text(sp_scores["CYLSPER", , drop = FALSE], labels = "CYLSPER", col = "orange", cex = 1.2)
+
+# Add environmental variable arrows
+text(rda_model_log, display = "bp", col = "darkgreen", cex = 1.1, scaling = 2)
+#############################################################################################aBOVE ONLY CHNGE THE LABEL NOT THE SAMPLE POINT. REDONE BELOW (Code is so much better) #REDO with the selected Envron data
+
+# Step 1: Log-transform toxin data safely
+toxin_data_log <- log1p(toxin_data)
+
+# Step 2: Add a group label based on dominant toxin
+dominant_toxin <- apply(toxin_data_log, 1, function(x) {
+  if (x["MICX"] > x["CYLSPER"]) {
+    "MICX-dominant"
+  } else if (x["CYLSPER"] > x["MICX"]) {
+    "CYLSPER-dominant"
+  } else {
+    "Equal"
+  }
+})
+
+# Step 3: Run RDA
+rda_model_log <- rda(toxin_data_log ~ ., data = environ_nla_data_few) #replace "environ_data" with "environ_nla_data_few"
+
+# Step 4: Extract site scores
+site_scores <- scores(rda_model_log, display = "sites", scaling = 2)
+
+# Step 5: Plot and color points based on dominant toxin
+plot(rda_model_log, type = "n", scaling = 2, main = "RDA: Sites Colored by Dominant Toxin (toxin_data_log)")
+cols <- c("MICX-dominant" = "red", "CYLSPER-dominant" = "blue", "Equal" = "purple")
+points(site_scores, col = cols[dominant_toxin], pch = 19)
+
+# Step 6: Add legend and labels
+legend("topright", legend = names(cols), col = cols, pch = 19, title = "Dominant Toxin")
+text(rda_model_log, display = "species", col = "black", cex = 1.2, scaling = 2)
+text(rda_model_log, display = "bp", col = "darkgreen", cex = 1.1, scaling = 2)
 
 ############################################################################CCA WITH THE FEW DATASET  (STILL NOT A GOOD (CLEAR)PLOT COMPARE TO RDA)
 
