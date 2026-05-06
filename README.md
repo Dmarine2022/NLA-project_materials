@@ -43,9 +43,11 @@ o	Relevant toxin and environmental variables
 Repository Structure 
 
 data_raw/          # Original NLA datasets 
-scripts/               # R scripts for data cleaning, analysis, and visualization
-figures/               # Output plots and figures
-results/               # Model outputs and summaries
+
+NLA-data_analysis_project_RScript_May5_2026/               # R scripts for data cleaning, analysis, and visualization
+
+figures/          # Output plots and figures used in the manuscript
+
 README.md    # Project documentation
 
 
