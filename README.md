@@ -42,11 +42,17 @@ o	Relevant toxin and environmental variables
 
 Repository Structure 
 
-data_raw/          # Original NLA datasets 
+NLA2012_dataset/          # Original NLA datasets 2012 survey
+
+NLA2017_dataset/          # Original NLA datasets 2017 survey
+
+NLA2022_dataset/          # Original NLA datasets 2022 survey
+
+PTOX_list/          # List of toxin producing cyanobacteria taxa in literature
 
 NLA-data_analysis_project_RScript_May5_2026/               # R scripts for data cleaning, analysis, and visualization
 
-figures/          # Output plots and figures used in the manuscript
+Figures/          # Output plots and figures used in the manuscript
 
 README.md    # Project documentation
 
@@ -59,6 +65,8 @@ All analyses were conducted in R. Scripts are organized to allow:
 3.	Statistical analysis and modeling
 4.	Figure generation
 Users should be able to reproduce the main results by running scripts in sequence.
+Please load the individual datasets for 2022, 2017, and 2012.
+
 
 Contact
 
