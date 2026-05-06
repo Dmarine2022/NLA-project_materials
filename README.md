@@ -6,12 +6,14 @@ This repository contains code and supporting information used in our manuscript 
 The goal of this project is to evaluate patterns in toxin occurrence and environmental factors across U.S. lakes using standardized, large-scale monitoring data. We examined whether the physicochemical predictors of conventional biomass indicators, such as chlorophyll-a and total cyanobacterial biovolume, differ from those influencing the biovolumes of key toxin-producing taxa, including Microcystis and Cylindrospermopsis. We further assessed what limnological factors are most strongly associated with microcystins (MICX) and cylindrospermopsins (CYLSPER). We used statistical models to quantify relationships and rank predictor importance across chlorophyll-a, total cyanobacterial biovolume, and the biovolumes of dominant toxin-producing genera, and main factors driving the two major toxins.
 
 Data Source
+
 All raw datasets were downloaded directly from the U.S. EPA National Aquatic Resource Surveys:
 https://www.epa.gov/national-aquatic-resource-surveys/data-national-aquatic-resource-surveys
 For detailed descriptions of variables and abbreviations, refer to the metadata .txt files provided by the EPA.
 
 
 Few key Variables and Abbreviations
+
 •	MICX = Microcystin (water column sample)
 •	CYLSPER = Cylindrospermopsin
 Note: Only “X” site samples (open water) were used in this analysis.
@@ -30,6 +32,7 @@ o	MICX → 0.05 µg/L
 o	CYLSPER → 0.025 µg/L
 
 Data Processing Notes
+
 •	Relevant variables were selected for analysis.
 •	Data were filtered to include:
 o	Open water sampling sites (“X” sites)
@@ -38,6 +41,7 @@ o	Relevant toxin and environmental variables
 
 
 Repository Structure 
+
 data_raw/          # Original NLA datasets 
 scripts/               # R scripts for data cleaning, analysis, and visualization
 figures/               # Output plots and figures
@@ -46,6 +50,7 @@ README.md    # Project documentation
 
 
 Reproducibility
+
 All analyses were conducted in R. Scripts are organized to allow:
 1.	Data import and cleaning
 2.	Data transformation
@@ -54,5 +59,6 @@ All analyses were conducted in R. Scripts are organized to allow:
 Users should be able to reproduce the main results by running scripts in sequence.
 
 Contact
+
 For questions or collaboration inquiries, please reach out to the repository maintainer.
 Yusuf Olaleye (Yusuf_Olaleye1@baylor.edu)
