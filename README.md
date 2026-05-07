@@ -31,8 +31,7 @@ Method Detection Limits (MDL)
 •	Cylindrospermopsin (CYLSPER): 0.05 µg/L
 •	Non-detects were replaced with:
 o	MICX → 0.05 µg/L
-o	CYLSPER → 0.025 µg/L
-To improve the statistical power.
+o	CYLSPER → 0.025 µg/L To improve the statistical power.
 
 Data Processing Notes
 
