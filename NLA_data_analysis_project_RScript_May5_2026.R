@@ -4169,7 +4169,7 @@ plot(MICX_m13_log$gam, select = 8, shade = TRUE, shade.col = "steelblue2",
      main = "(C) Magnesium (Mg2+)",
      ylab = "Partial effect on MICX Conc.")
 abline(v = bp_MG2, col = "red", lwd = 2, lty = 2)
-text(bp_NTL + 1.05, -0.1,
+text(bp_MG2 + 1.05, -0.1,
      labels = paste0("Sparse point (log) ~ ", bp_MG2,
                      "\nOriginal (mg/L) = ", round(orig_bp_MG2, 3)),
      pos = 4, col = "red")
