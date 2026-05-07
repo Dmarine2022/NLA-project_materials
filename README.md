@@ -7,9 +7,11 @@ The goal of this project is to evaluate patterns in toxin occurrence and environ
 
 Data Source
 
-All raw datasets were downloaded directly from the U.S. EPA National Aquatic Resource Surveys:
+All raw datasets were downloaded directly from the U.S. EPA National Aquatic Resource Surveys, filter data by lakes to get National Lakes Assessment (NLA) for the years 2012, 2017, and 2022:
 https://www.epa.gov/national-aquatic-resource-surveys/data-national-aquatic-resource-surveys
 For detailed descriptions of variables and abbreviations, refer to the metadata .txt files provided by the EPA.
+
+We downloaded all datasets relevant to our research questions from the website, such as water chemistry data, algal toxin data, chlorophyll-a (chl-a) data, phytoplankton count data, Secchi depth data, hydrographic profile data, and site information data. 
 
 
 Few key Variables and Abbreviations
