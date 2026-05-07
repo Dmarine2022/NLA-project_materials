@@ -29,9 +29,10 @@ Cyanotoxin measurements below detection limits (BDL) were handled using a half d
 Method Detection Limits (MDL)
 •	Microcystin (MICX): 0.1 µg/L
 •	Cylindrospermopsin (CYLSPER): 0.05 µg/L
-•	Values reported as non-detects were replaced with:
+•	Non-detects were replaced with:
 o	MICX → 0.05 µg/L
 o	CYLSPER → 0.025 µg/L
+To improve the statistical power.
 
 Data Processing Notes
 
